@@ -96,8 +96,10 @@ class JpaOwnerRepositoryTest {
 
     @Test
     void noSpringRepositoryAnnotation() {
-        assertFalse(JpaOwnerRepositoryImpl.class.isAnnotationPresent(
-            org.springframework.stereotype.Repository.class),
+        boolean hasSpringRepo = Arrays.stream(JpaOwnerRepositoryImpl.class.getAnnotations())
+            .anyMatch(a -> a.annotationType().getName().equals(
+                "org.springframework.stereotype.Repository"));
+        assertFalse(hasSpringRepo,
             "Should not have Spring @Repository annotation in migrated code");
     }
 

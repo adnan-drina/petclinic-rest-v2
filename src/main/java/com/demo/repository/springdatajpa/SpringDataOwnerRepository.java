@@ -17,26 +17,19 @@ package com.demo.repository.springdatajpa;
 
 import java.util.Collection;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
 import com.demo.model.Owner;
 import com.demo.repository.OwnerRepository;
 
 /**
- * Spring Data JPA specialization of the {@link OwnerRepository} interface
- *
- * @author Michael Isvy
- * @since 15.1.2013
+ * Specialization of {@link OwnerRepository}. Query fetch joins live in
+ * {@code JpaOwnerRepositoryImpl} (CDI); Quarkus Spring Data JPA removed to
+ * avoid dual-implementation Arc conflicts.
  */
-
-public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, Integer> {
-
-    @Override
-    @Query("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName%")
-    Collection<Owner> findByLastName(@Param("lastName") String lastName);
+public interface SpringDataOwnerRepository extends OwnerRepository {
 
     @Override
-    @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
-    Owner findById(@Param("id") int id);
+    Collection<Owner> findByLastName(String lastName);
+
+    @Override
+    Owner findById(int id);
 }
