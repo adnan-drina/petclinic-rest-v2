@@ -2,13 +2,11 @@ package com.demo.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
-import com.demo.dto.VisitAllOfDto;
-import com.demo.dto.VisitFieldsDto;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * A booking for a vet visit.

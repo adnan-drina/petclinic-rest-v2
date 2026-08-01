@@ -20,7 +20,6 @@ import jakarta.inject.Inject;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
