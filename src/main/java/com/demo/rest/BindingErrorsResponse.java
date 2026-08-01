@@ -18,11 +18,19 @@ package com.demo.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import jakarta.validation.ConstraintViolation;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @author Vitaliy Fedoriv
+ *
+ */
 
 public class BindingErrorsResponse {
 
@@ -54,65 +62,75 @@ public class BindingErrorsResponse {
         addError(error);
     }
 
-    private final List<BindingError> bindingErrors = new ArrayList<>();
+	private final List<BindingError> bindingErrors = new ArrayList<>();
 
-    public void addError(BindingError bindingError) {
-        this.bindingErrors.add(bindingError);
-    }
+	public void addError(BindingError bindingError) {
+		this.bindingErrors.add(bindingError);
+	}
 
-    public String toJSON() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-        String errorsAsJSON = "";
-        try {
-            errorsAsJSON = mapper.writeValueAsString(bindingErrors);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return errorsAsJSON;
-    }
+	public void addAllErrors(Set<ConstraintViolation<?>> violations) {
+		for (ConstraintViolation<?> violation : violations) {
+			BindingError error = new BindingError();
+			error.setObjectName(violation.getPropertyPath().toString());
+			error.setFieldName(violation.getPropertyPath().toString());
+			error.setFieldValue(String.valueOf(violation.getInvalidValue()));
+			error.setErrorMessage(violation.getMessage());
+			addError(error);
+		}
+	}
 
-    @Override
-    public String toString() {
-        return "BindingErrorsResponse [bindingErrors=" + bindingErrors + "]";
-    }
+	public String toJSON() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		try {
+			return mapper.writeValueAsString(bindingErrors);
+		} catch (JsonProcessingException e) {
+			// Return empty JSON array if serialization fails
+			return "[]";
+		}
+	}
 
-    protected static class BindingError {
+	@Override
+	public String toString() {
+		return "BindingErrorsResponse [bindingErrors=" + bindingErrors + "]";
+	}
 
-        private String objectName;
-        private String fieldName;
-        private String fieldValue;
-        private String errorMessage;
+	protected static class BindingError {
 
-        public BindingError() {
-            this.objectName = "";
-            this.fieldName = "";
-            this.fieldValue = "";
-            this.errorMessage = "";
-        }
+		private String objectName;
+		private String fieldName;
+		private String fieldValue;
+		private String errorMessage;
 
-        protected void setObjectName(String objectName) {
-            this.objectName = objectName;
-        }
+		public BindingError() {
+			this.objectName = "";
+			this.fieldName = "";
+			this.fieldValue = "";
+			this.errorMessage = "";
+		}
 
-        protected void setFieldName(String fieldName) {
-            this.fieldName = fieldName;
-        }
+		protected void setObjectName(String objectName) {
+			this.objectName = objectName;
+		}
 
-        protected void setFieldValue(String fieldValue) {
-            this.fieldValue = fieldValue;
-        }
+		protected void setFieldName(String fieldName) {
+			this.fieldName = fieldName;
+		}
 
-        protected void setErrorMessage(String error_message) {
-            this.errorMessage = error_message;
-        }
+		protected void setFieldValue(String fieldValue) {
+			this.fieldValue = fieldValue;
+		}
 
-        @Override
-        public String toString() {
-            return "BindingError [objectName=" + objectName + ", fieldName=" + fieldName + ", fieldValue=" + fieldValue
-                    + ", errorMessage=" + errorMessage + "]";
-        }
+		protected void setErrorMessage(String errorMessage) {
+			this.errorMessage = errorMessage;
+		}
 
-    }
+		@Override
+		public String toString() {
+			return "BindingError [objectName=" + objectName + ", fieldName=" + fieldName + ", fieldValue=" + fieldValue
+					+ ", errorMessage=" + errorMessage + "]";
+		}
+
+	}
 
 }
