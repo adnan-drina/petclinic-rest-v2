@@ -17,15 +17,16 @@ package com.demo.repository.springdatajpa;
 
 import java.util.Collection;
 
+import org.springframework.data.repository.Repository;
 import com.demo.model.Owner;
 import com.demo.repository.OwnerRepository;
 
 /**
- * Specialization of {@link OwnerRepository}. Query fetch joins live in
- * {@code JpaOwnerRepositoryImpl} (CDI); Quarkus Spring Data JPA removed to
- * avoid dual-implementation Arc conflicts.
+ * Spring Data-shaped specialization of {@link OwnerRepository}. Fetch-join
+ * queries live in {@code JpaOwnerRepositoryImpl}; Quarkus Spring Data JPA
+ * extension is not used (avoids dual Arc implementations).
  */
-public interface SpringDataOwnerRepository extends OwnerRepository {
+public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, Integer> {
 
     @Override
     Collection<Owner> findByLastName(String lastName);

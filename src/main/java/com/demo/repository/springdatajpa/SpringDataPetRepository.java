@@ -17,15 +17,16 @@ package com.demo.repository.springdatajpa;
 
 import java.util.List;
 
+import org.springframework.data.repository.Repository;
+import com.demo.model.Pet;
 import com.demo.model.PetType;
 import com.demo.repository.PetRepository;
 
 /**
- * Specialization of {@link PetRepository}; custom deletes on
- * {@link PetRepositoryOverride} / SpringDataPetRepositoryImpl. PetType listing
- * implemented by CDI JPA path (no Spring Data proxy).
+ * Spring Data-shaped specialization of {@link PetRepository}. PetType listing
+ * / deletes implemented by CDI beans; no Quarkus Spring Data JPA proxies.
  */
-public interface SpringDataPetRepository extends PetRepository, PetRepositoryOverride {
+public interface SpringDataPetRepository extends PetRepository, Repository<Pet, Integer>, PetRepositoryOverride {
 
     @Override
     List<PetType> findPetTypes();
