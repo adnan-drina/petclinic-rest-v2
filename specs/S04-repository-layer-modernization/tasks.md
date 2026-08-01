@@ -127,9 +127,17 @@ Modernize Spring Data JPA repositories/overrides. Prefer Quarkus-compatible shap
 
 **Target design**:
 - `.../springdatajpa/SpringDataOwnerRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataOwnerRepository.java`
-- `.../springdatajpa/SpringDataPetRepository.java` (+ Impl/Override) → `src/main/java/com/demo/repository/springdatajpa/`
-- `.../springdatajpa/SpringDataVisitRepository.java` (+ Impl/Override) → `src/main/java/com/demo/repository/springdatajpa/`
-- remaining SpringData* + *Override types → `src/main/java/com/demo/repository/springdatajpa/`
+- `.../springdatajpa/SpringDataPetRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataPetRepository.java`
+- `.../springdatajpa/SpringDataPetRepositoryImpl.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataPetRepositoryImpl.java`
+- `.../springdatajpa/SpringDataVisitRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataVisitRepository.java`
+- `.../springdatajpa/SpringDataVisitRepositoryImpl.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataVisitRepositoryImpl.java`
+- `.../springdatajpa/SpringDataPetTypeRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataPetTypeRepository.java`
+- `.../springdatajpa/SpringDataPetTypeRepositoryImpl.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataPetTypeRepositoryImpl.java`
+- `.../springdatajpa/SpringDataSpecialtyRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataSpecialtyRepository.java`
+- `.../springdatajpa/SpringDataSpecialtyRepositoryImpl.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataSpecialtyRepositoryImpl.java`
+- `.../springdatajpa/SpringDataVetRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataVetRepository.java`
+- `.../springdatajpa/SpringDataUserRepository.java` → `src/main/java/com/demo/repository/springdatajpa/SpringDataUserRepository.java`
+- overrides → `src/main/java/com/demo/repository/springdatajpa/PetRepositoryOverride.java`, `VisitRepositoryOverride.java`, `PetTypeRepositoryOverride.java`, `SpecialtyRepositoryOverride.java`
 
 **Acceptance**: springdatajpa package compiles; interfaces still satisfy `com.demo.repository.*` contracts where applicable
 
