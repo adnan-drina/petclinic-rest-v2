@@ -25,7 +25,11 @@
          JUnit tests (migration model/unit tests). Sonar imports whichever
          exists. -->
     <sonar.coverage.jacoco.xmlReportPaths>target/jacoco-report/jacoco.xml,target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-  </properties>
+      <!-- O-DTOCOV: OpenAPI-harvested DTOs are generated shapes — exclude from
+         new-code coverage/CPD gates (do not invent BaseDto / theater tests). -->
+    <sonar.coverage.exclusions>**/dto/**</sonar.coverage.exclusions>
+    <sonar.cpd.exclusions>**/dto/**</sonar.cpd.exclusions>
+</properties>
 
   <repositories>
     <repository>
