@@ -180,5 +180,39 @@ class JpaRepositoriesIT {
         Integer birdId = bird.getId();
         springDataPetTypes.delete(bird);
         assertTrue(petTypes.findAll().stream().noneMatch(t -> birdId.equals(t.getId())));
+
+        // JPA delete tails (primary CDI beans) for new_coverage ≥80%
+        PetType fish = new PetType();
+        fish.setName("fish");
+        petTypes.save(fish);
+        Owner o2 = new Owner();
+        o2.setFirstName("Grace");
+        o2.setLastName("Hopper");
+        o2.setAddress("Navy");
+        o2.setCity("Arlington");
+        o2.setTelephone("1");
+        owners.save(o2);
+        Pet p2 = new Pet();
+        p2.setName("Nemo");
+        p2.setBirthDate(LocalDate.of(2021, 1, 1));
+        p2.setType(fish);
+        p2.setOwner(o2);
+        pets.save(p2);
+        Visit v2 = new Visit();
+        v2.setDate(LocalDate.of(2021, 2, 2));
+        v2.setDescription("tank");
+        v2.setPet(p2);
+        visits.save(v2);
+        visits.delete(visits.findById(v2.getId()));
+        pets.delete(pets.findById(p2.getId()));
+        owners.delete(owners.findById(o2.getId()));
+        petTypes.delete(petTypes.findById(fish.getId()));
+        assertTrue(petTypes.findAll().stream().noneMatch(t -> "fish".equals(t.getName())));
+
+        Specialty dermatology = new Specialty();
+        dermatology.setName("dermatology");
+        specialties.save(dermatology);
+        specialties.delete(specialties.findById(dermatology.getId()));
+        assertTrue(specialties.findAll().stream().noneMatch(s -> "dermatology".equals(s.getName())));
     }
 }
