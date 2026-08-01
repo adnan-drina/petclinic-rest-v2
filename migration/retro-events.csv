@@ -13,3 +13,36 @@ epoch,stage,attempt,class,action
 1785586688,preflightfix-r1,1,success,commit
 1785587027,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-xjldx
 1785587027,m5-ship,0,story_gate_pass,non-deploy story
+1785589068,T-002,0,already_complete,absent:javax-to-jakarta-import-00001
+1785589068,T-002,0,rule:javax-to-jakarta-import-00001,already_complete
+1785589078,T-003,0,already_complete,absent:javax-to-jakarta-import-00001
+1785589078,T-003,0,rule:javax-to-jakarta-import-00001,already_complete
+1785589292,T-002,0,rule:javax-to-jakarta-import-00001,mechan
+1785589743,T-003,0,rule:javax-to-jakarta-import-00001,worker_green
+1785589748,T-004,0,already_complete,absent:PetClinicApplication
+1785589748,T-004,0,rule:springboot-annotations-to-quarkus-00002,already_complete
+1785589748,T-004,0,sensor_red_post_commit,verify
+1785589769,T-004,0,sfix_worker_first,milestone
+1785590101,T-004,0,sfix_minimax_rescue,milestone:1
+1785591216,T-005,0,already_complete,absent:springboot-annotations-to-quarkus-00002
+1785591216,T-005,0,rule:springboot-annotations-to-quarkus-00002,already_complete
+1785591233,T-006,0,rule:javax-to-jakarta-import-00001,mechan
+1785591706,T-007,0,rule:javax-to-jakarta-import-00001,worker_green
+1785591848,T-008,0,escalation_cause,guard-refused
+1785591910,T-008,1,success,commit
+1785592053,T-008,0,sensor_red_post_commit,verify
+1785592217,T-008,0,style_autofix,partial
+1785592217,T-008,0,sfix_worker_first,milestone
+1785593066,T-008,0,sfix_minimax_rescue,milestone:1
+1785593968,T-008,0,sfix_committed_still_red,verify
+1785593968,T-008,0,debt_recorded,milestone
+1785594771,m5-evaluate,1,quota,retrying
+1785596360,m5-evaluate,1,success,commit
+1785596394,m5-ship,0,preflight_red,round=1
+1785596561,preflightfix-r1,1,success,commit
+1785596771,m5-ship,0,preflight_red,round=2
+1785597478,preflightfix-r2,1,no_commit,retrying
+1785597515,preflightfix-r2,2,no_commit,retrying
+1785597538,preflightfix-r2,2,mechanical_commit,closure
+1785597776,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-xkdqz
+1785597777,m5-ship,0,story_gate_pass,non-deploy story

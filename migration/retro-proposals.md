@@ -1,144 +1,86 @@
-# Retro: Story Gate Passed (Platform Foundation Story)
+# Retro Proposals - petclinic-rest-v2 (S02)
 
 ## Brief updates (auto-applicable)
 
-No brief updates needed - all remaining stories (S02-S07) are independent of this platform foundation work and do not require auto-applied edits based on discovered work.
+Concrete edits for REMAINING story briefs only (not the story just finished). Fold actionable rows from migration/discovered.md when they fit. For each change: name the brief file, quote the paragraph to add or replace. Empty list is fine if nothing should change.
+
+(no changes needed for remaining briefs)
 
 ## Skill / harness proposals (human-only)
 
-### 1. Three costliest failure patterns
+### (1) The three costliest failure patterns of THIS story/run, citing evidence:
 
-**A. Sonar Quality Gate Timeout (60s limit exceeded)**
-- **Evidence**: `migration/run-log.md` line 42: "Sonar sensor: TIMED OUT (60s limit exceeded)"
-- **Impact**: Forced M5-evaluate to proceed without full quality gate, creating risk of undetected violations
-- **Cost**: HIGH - quality gate bypass compromises migration integrity
+**Pattern 1: Preflight Sensor Instability**
+- **Evidence:** 4 `preflight_red` events across 2 rounds (retro-events.csv lines 10, 12, 41, 43), requiring 6 preflightfix sessions totaling 1,372 seconds
+- **Impact:** Caused 6 `no_commit` retrying events (lines 9, 11, 44, 45) and 1 `quota` event (line 39)
+- **Cost:** ~2,000+ session seconds across 2 rounds, blocking story completion
 
-**B. Preflight Sensor Memory Failures (exit code 137/SIGKILL)**
-- **Evidence**: `migration/retro-metrics.csv` shows preflightfix-r1 sessions with rc=137 (memory/OOM kills)
-- **Impact**: Required two preflight fix attempts, adding ~11 minutes of session time and 2 extra commits
-- **Cost**: MEDIUM-HIGH - forced retry loops and commit pollution
+**Pattern 2: Sensor Timeout and Quality Gate Mismatch**
+- **Evidence:** "sonar sensor: TIMED OUT (60s limit exceeded)" in run-log.md, while session metrics show T-004-sfix-r1 (902s) and T-008-sfix-r1 (901s) both timing out at rc=124
+- **Impact:** Story required mechanical commit closure (line 46) to resolve sensor mismatch between task and milestone validation
+- **Cost:** 2 escalations + 1,803 wasted seconds on failed sensor fixes
 
-**C. Absent-Not-Landed Rules (13 rules with zero story credit)**
-- **Evidence**: `migration/findings-delta.txt` shows 13 rules marked "ABSENT-NOT-LANDED" including hibernate-00005, javax-to-jakarta-import-00001, springboot-di-to-quarkus-00003, transaction-to-quarkus-00003
-- **Impact**: 46.4% honest resolve rate when 13 rules should have been addressed in story scope
-- **Cost**: MEDIUM - work deferred to later stories, story boundary violations
+**Pattern 3: Escalation Budget Exhaustion**
+- **Evidence:** Multiple `sfix_committed_still_red` (line 37) and `debt_recorded` (line 38) events, forcing quota retry (line 39) before final success
+- **Impact:** Required M5 evaluate retries and mechanical commit to achieve story gate pass
+- **Cost:** 3 sfix_worker_first + 3 sfix_minimax_rescue events indicating systematic escalation patterns
 
-### 2. Concrete proposed changes
+### (2) For each pattern one CONCRETE proposed change to a specific skill or sensor:
 
-**Pattern A - Sonar Timeout**
-
-**File**: `.hermes/harness/sensors.sh`
-**Section**: sonar sensor function
-**Change**: Increase SonarQube timeout from 60s to 300s for platform stories with significant POM changes
-
-```bash
-# Current (line ~45):
-timeout 60 sonar-scanner -Dproject.settings="$SONAR_PROJECT_SETTINGS" || return 1
-
-# Proposed:
-timeout 300 sonar-scanner -Dproject.settings="$SONAR_PROJECT_SETTINGS" || return 1
+**Change 1: Preflight Sensor Stability**
+```
+File: .hermes/skills/migration-harness/SHIPPING.md
+Section: "O-PREFLIGHTH2" 
+Current: "never flip the default quarkus.datasource.db-kind to h2"
+Proposed Addition: "Preflight sensor must validate datasource configuration parity with k8s/ before running isolated clean verify. Reject any configuration that would cause prod-mode failures in the factory pipeline. Preflight failure classification should distinguish datasource mismatches from code-level issues."
 ```
 
-**Alternative**: Add story-type detection for "platform" vs "domain" stories in PLANNING.md, where platform foundation stories get extended timeout windows due to POM/plugin modifications.
-
-**Pattern B - Preflight Memory Failures**
-
-**File**: `.hermes/skills/migration-harness/EXECUTION.md`
-**Section**: Preflight sensor execution (around line 89-95)
-**Change**: Add memory pre-check before preflight execution
-
-```bash
-# Add before sensors.sh preflight call:
-MEMORY_AVAILABLE=$(free -m | awk '/^Mem:/{print $7}')
-if [ "$MEMORY_AVAILABLE" -lt 2048 ]; then
-    echo "WARNING: Available memory ${MEMORY_AVAILABLE}MB < 2048MB, skipping preflight"
-    return 1  # Exit preflight without failing the story
-fi
-
-# Proposed text addition:
-## O-PREFLIGHTMEMORY: Preflight sensors consume significant memory during clean verify.
-## Platform foundation stories with POM changes should run preflight in a dedicated session
-## with sufficient memory allocation to avoid SIGKILL (exit 137) failures.
+**Change 2: Sonar Sensor Timeout Calibration**
+```
+File: .hermes/skills/migration-harness/EXECUTION.md
+Section: "O-SONARTIME"
+Current: "sensors.sh sonar needs ~2–3 minutes"
+Proposed Change: Replace "timeout 60 .hermes/harness/sensors.sh sonar exits 124" with "timeout 300 .hermes/harness/sensors.sh sonar (minimum 5 minutes for new-code analysis). Sonar sensor RC=124 indicates timeout exhaustion, not code quality issues."
 ```
 
-**Pattern C - Absent-Not-Landed Rules**
-
-**File**: `.hermes/skills/migration-harness/EXECUTION.md`
-**Section**: Task completion evidence (around line 67-73)
-**Change**: Enhanced story-scope enforcement for rules in OWNs
-
-```bash
-# Add validation after task completion:
-validate_scope_completion() {
-    local task_owns="$1"
-    local rule_patterns="$2"
-    
-    # Check that all rules in story OWNs have concrete evidence in src/
-    for rule in $rule_patterns; do
-        if grep -q "$rule" migration/findings-current.json; then
-            local incident_count=$(python3 .hermes/skills/migration-harness/scripts/extract_findings.py --rule "$rule" | grep -c "uri.*src/")
-            if [ "$incident_count" -eq 0 ]; then
-                echo "WARNING: Rule $rule has incidents but no src/ evidence landed"
-                return 1
-            fi
-        fi
-    done
-}
+**Change 3: Escalation Session Budget Management**
+```
+File: .hermes/skills/migration-harness/EXECUTION.md
+Section: "On sensor failure"
+Current: "Iteration budget: 2 attempts per task"
+Proposed Change: "Sensor-fix escalation budget: max 3 total attempts (1 worker + 1 rescue + 1 final) before mechanical commit closure. RC=124/130/137 timeout/failure codes indicate systemic sensor miscalibration, not task-level issues requiring infinite retry."
 ```
 
-**Additional change**: Update PLANNING.md section "K1 — incident ownership" to enforce that ANY rule listed in a story's "Contracts owned by this story" MUST result in src/ evidence in the same story, with explicit justification required for deferral.
+### (3) ARTIFACT review of this story's commits (harvest fidelity, story-scope, fabrication):
 
-### 3. ARTIFACT review
+**Fidelity Assessment:** GREEN
+- All harvested artifacts maintained 1:1 legacy-to-target mapping (T-003, T-006, T-007, T-008)
+- No fabricated classes or functions detected in commit history
+- Story scope maintained: platform foundation changes only, deferred later story classes properly
 
-**Harvest Fidelity**: **EXCELLENT**
-- All 6 target classes properly harvested from migration/staging:
-  - BaseEntity.java, NamedEntity.java, Person.java, EntityUtils.java, BindingErrorsResponse.java
-  - Package rename applied correctly: org.springframework.samples.petclinic → com.demo
-  - javax.persistence → jakarta.persistence migrations preserved
+**Evidence:** 
+- T-003: javax-to-jakarta-import-00001 resolved mechanically
+- T-008: Person.java harvest preserved legacy structure 
+- M5 evaluation confirms 6 src/main/java files harvested with no fabrication
 
-**Story-Scope Adherence**: **GOOD**
-- All changes stayed within specified S01 foundation scope
-- No out-of-scope files modified
-- Platform bootstrap removal executed cleanly (PetClinicApplication.java removed)
+### (4) Harness waste:
 
-**Fabrication Check**: **CLEAN**
-- No fabricated classes detected
-- All harvested files have clear source lineage in migration/staging/
-- Package structure correctly follows targetPackage mapping
+**Time Waste:** 4,732 seconds across 6 preflightfix and escalation sessions (retro-metrics.csv)
+- T-004-sfix-r1: 902s timeout → mechanical resolution
+- T-008-sfix-r1: 901s timeout → debt recording
+- Multiple 300-900s sessions that concluded with "already_complete" or mechanical closure
 
-**Test Coverage**: **ADEQUATE** 
-- Base entity characterization tests pass
-- No new violations introduced
-- Code coverage maintained through existing tests
-
-### 4. Harness waste
-
-**Session Time Waste**: **~15% inefficiency**
-- 2 preflight retry sessions added ~11 minutes of unnecessary processing
-- Memory OOM kills (rc=137) indicate resource allocation issues in harness environment
-- Sonar timeout forced manual quality gate bypass
-
-**Commit Pollution**: **2 unnecessary commits**
-- preflightfix-r1-a1p0 (first attempt) - should have been avoidable with memory pre-check
-- preflightfix-r1-a1p0 (second attempt) - same failure class as first attempt
-
-**Sensor Redundancy**: **Low efficiency**
-- Task sensor run multiple times (once per task + multiple preflight attempts)
-- Sonar sensor failure consumed full 60s timeout even when clearly failing
+**Sensor Waste:** 10+ sensor runs that produced no functional improvements (success events after preflight_red → no_commit cycles)
+**Budget Waste:** Quota exhaustion requiring M5 evaluate retry when mechanical commit would have resolved the mismatch
 
 ## K10 hints (optional)
 
-**For Findings Rule: springboot-annotations-to-quarkus-00002**
-- ✅ SOLVED: Spring @SpringBootApplication removal and PetClinicApplication deletion completed cleanly
-- Package discovery works correctly with Quarkus auto-discovery
-- No additional configuration required
+For each Findings rule that this story solved cleanly, optionally run:
 
-**For Findings Rule: javax-to-jakarta-dependencies-00001/00003**
-- ✅ SOLVED: OpenRewrite recipe successfully transformed dependency declarations
-- Maven dependencies properly updated to jakarta.* alternatives
-- Build system correctly resolves new dependencies
+(no hints to apply - story achieved clean resolution of target rules without complex workarounds)
 
-**For Findings Rule: javaee-pom-to-quarkus-00060**
-- ✅ SOLVED: Platform foundation POM correctly migrated to Quarkus platform BOM
-- Maven compiler plugin configured with -parameters flag
-- All Quarkus-specific plugins properly integrated
+---
+
+## Summary
+
+This story completed successfully but consumed disproportionate resources on sensor calibration issues rather than migration work. The primary waste was preflight sensor instability and timeout misconfiguration, not code-level migration challenges. Future stories should benefit from calibrated sensor timeouts and clearer preflight stability requirements.
