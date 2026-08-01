@@ -46,3 +46,25 @@ epoch,stage,attempt,class,action
 1785597538,preflightfix-r2,2,mechanical_commit,closure
 1785597776,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-xkdqz
 1785597777,m5-ship,0,story_gate_pass,non-deploy story
+1785600468,T-003,0,sensor_red_post_commit,verify
+1785600497,T-003,0,style_autofix,partial
+1785600497,T-003,0,sfix_worker_first,milestone
+1785600814,T-003,0,sfix_minimax_rescue,milestone:1
+1785601342,T-003,0,sfix_committed_still_red,verify
+1785601352,T-003,0,debt_recorded,milestone
+1785602389,T-005,0,escalation_cause,worker-failed
+1785602745,m5-ship,0,preflight_red,round=1
+1785603493,T-006,0,worker_wedge_class,READ_THRASH
+1785603502,T-006,0,escalation_cause,worker-failed
+1785604116,T-008,0,escalation_cause,guard-refused
+1785604442,m5-evaluate,1,success,commit
+1785604453,m5-ship,0,preflight_red,round=1
+1785604764,preflightfix-r1,1,quota,retrying
+1785605693,m5-ship,0,preflight_red,round=2
+1785606596,preflightfix-r2,1,success,commit
+1785607042,m5-ship,0,pipeline_failed,petclinic-rest-v2-push-rj25z
+1785607252,deployfix-r1,1,no_commit,retrying
+1785607445,deployfix-r1,2,no_commit,retrying
+1785607458,deployfix-r1,2,mechanical_commit,closure
+1785607621,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-bbkwp
+1785607621,m5-ship,0,story_gate_pass,non-deploy story

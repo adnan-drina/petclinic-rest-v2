@@ -4,3 +4,4 @@ Prior `retro-proposals.md` snapshots. Newest current file is
 `migration/retro-proposals.md` (brief-refresh reads that).
 
 - `20260801T152257Z-S02.md` — archived before next Retro (S02)
+- `20260801T180701Z-S03.md` — archived before next Retro (S03)
