@@ -107,11 +107,38 @@ Harvest the remaining entity classes from staging with package rename.
 
 ---
 
-## T-005: Harvest mapper interfaces
+## T-005: Harvest DTOs with Jakarta validation imports
 **Shape**: create
 **Class**: rewrite
 
-Harvest all MapStruct mapper interfaces with package rename.
+Harvest all OpenAPI-generated DTOs (including `*AllOfDto` / `*FieldsDto`) with package rename.
+Source is legacy `target/generated-sources/openapi` (O-DTOSTAGING) — not `migration/staging`.
+
+**Target design**: → `src/main/java/com/demo/dto/*.java`
+
+**Source files**:
+- `/projects/legacy/target/generated-sources/openapi/src/main/java/org/springframework/samples/petclinic/dto/`
+
+**Actions**:
+1. Harvest every `*Dto.java` under the OpenAPI dto package (do not filter AllOf/Fields)
+2. Package rename: `org.springframework.samples.petclinic.dto` → `com.demo.dto`
+3. `javax.validation` / `javax.annotation` → `jakarta.*` where present
+4. Do not invent thin stub DTOs; do not write `.bak` copies (O-SIMPLEDTO / O-GITBAK)
+5. Ensure DTOs compile against already-harvested `com.demo.model` types if referenced
+
+**Verification**: `com.demo.dto` package present; task sensor GREEN; no stub/empty DTO beans
+
+**Owns**:
+- src/main/java/com/demo/dto/
+
+---
+
+## T-006: Harvest mapper interfaces
+**Shape**: create
+**Class**: rewrite
+
+Harvest all MapStruct mapper interfaces with package rename **after** T-005 DTOs (O-DTOFIRST).
+Add MapStruct dependencies + `componentModel = "jakarta-cdi"` (O-MAPCDI).
 
 **Target design**: → `src/main/java/com/demo/mapper/OwnerMapper.java`, `src/main/java/com/demo/mapper/PetMapper.java`, `src/main/java/com/demo/mapper/VisitMapper.java`, `src/main/java/com/demo/mapper/VetMapper.java`, `src/main/java/com/demo/mapper/SpecialtyMapper.java`, `src/main/java/com/demo/mapper/PetTypeMapper.java`, `src/main/java/com/demo/mapper/UserMapper.java`
 
@@ -125,27 +152,21 @@ Harvest all MapStruct mapper interfaces with package rename.
 - `/projects/legacy/src/main/java/org/springframework/samples/petclinic/mapper/UserMapper.java`
 
 **Actions**:
-1. Copy files from legacy to target location
-2. Replace package declarations: `org.springframework.samples.petclinic.mapper` → `com.demo.mapper`
-3. Update import statements: model imports → `com.demo.model.*`, dto imports preserved
-4. Verify MapStruct annotations preserved exactly
+1. Add `org.mapstruct:mapstruct` + `mapstruct-processor` (annotationProcessorPaths) to `pom.xml` if missing
+2. Copy mapper interfaces from legacy/staging to `com.demo.mapper`
+3. Package/import rename: mapper → `com.demo.mapper`, model → `com.demo.model`, dto → `com.demo.dto`
+4. Set `@Mapper(componentModel = "jakarta-cdi", …)` (preserve `uses = …`)
+5. Verify compile GREEN (DTOs from T-005 must already exist — do not invent stubs)
 
-**Verification**: Files compile, package declarations updated, MapStruct interfaces intact
+**Verification**: Files compile; MapStruct interfaces intact; task sensor GREEN
 
 **Owns**:
-- src/main/java/org/springframework/samples/petclinic/mapper/OwnerMapper.java
-- src/main/java/org/springframework/samples/petclinic/mapper/PetMapper.java
-- src/main/java/org/springframework/samples/petclinic/mapper/VisitMapper.java
-- src/main/java/org/springframework/samples/petclinic/mapper/VetMapper.java
-- src/main/java/org/springframework/samples/petclinic/mapper/SpecialtyMapper.java
-- src/main/java/org/springframework/samples/petclinic/mapper/PetTypeMapper.java
-- src/main/java/org/springframework/samples/petclinic/mapper/UserMapper.java
-
-**Target design**: → `src/main/java/com/demo/model/OwnerMapper.java` (architecture profile §7: HARVEST class preserved exactly, MapStruct interface maintained)
+- src/main/java/com/demo/mapper/
+- pom.xml (mapstruct deps only)
 
 ---
 
-## T-006: Create god-node characterization tests
+## T-007: Create god-node characterization tests
 **Shape**: create
 **Class**: infer
 
@@ -169,7 +190,7 @@ Create characterization tests for god-node entities to pin legacy behavior per a
 
 ---
 
-## T-007: Build verification and package validation
+## T-008: Build verification and package validation
 **Shape**: verify
 **Class**: infer
 
@@ -192,11 +213,11 @@ Verify the migrated domain model package compiles correctly and all dependencies
 
 **Package verification**:
 - Maven compile succeeds
-- All 18 entity and mapper classes present
+- Domain entities, DTOs, and mapper classes present
 - Tests pass (PetTypeTest, VisitTest, PetTest)
 - No compilation errors
 
-**Out of scope**: 
+**Out of scope**:
 - Acceptance endpoint testing (deferred to S-AC1)
 - Repository layer integration (deferred to S04)
 - Service layer integration (deferred to S05)
@@ -204,28 +225,6 @@ Verify the migrated domain model package compiles correctly and all dependencies
 **Legacy UI surface**: Waived - domain models have no direct UI exposure; UI surface handled by REST controllers in S06
 
 **Target design**: → `src/main/java/com/demo/model/package-info.java` (package documentation for git commit)
-
----
-
-## T-008: Commit S03 specification and plan
-**Shape**: modify
-**Class**: infer
-
-Commit the specification documents for the S03 domain model migration story.
-
-**Target design**: → `.git/index` and `specs/S03-domain-model-migration/*.md`
-
-**Actions**:
-1. Add all specification files to git index
-2. Commit with message starting with 'S03 spec:'
-3. Verify commit created successfully
-
-**Commit message**: `S03 spec: domain model migration specification and tasks`
-
-**Verification**: 
-- Git status shows new files staged
-- Commit hash generated successfully
-- Specification files preserved in repository
 
 ---
 
@@ -249,13 +248,12 @@ Commit the specification documents for the S03 domain model migration story.
 - `server.servlet.context-path` - No task needed (pure config, handled in later story)
 
 **Target design traceability** (architecture profile §7):
-- **OwnerMapper**: HARVEST class → T-005 targets mappers (MapStruct interface preserved exactly)
-- **PetMapper**: HARVEST class → T-005 targets mappers (MapStruct interface preserved exactly)
-- **All other mappers**: HARVEST classes → T-005 targets mapper interfaces (MapStruct interfaces preserved exactly)
+- **DTOs**: HARVEST OpenAPI-generated → T-005 (`com.demo.dto`, O-DTOSTAGING)
+- **Mappers**: HARVEST MapStruct → T-006 after DTOs + mapstruct deps (O-DTOFIRST / O-MAPCDI)
 
 **All mandatory findings mapped to tasks**: ✓
-**All god-node entities characterized**: ✓ (PetType, Visit, Pet via T-006)
-**All circular dependency group converted**: ✓ (18 classes total across T-002 to T-005)
+**All god-node entities characterized**: ✓ (PetType, Visit, Pet via T-007)
+**All circular dependency group converted**: ✓ (18 classes total across T-002 to T-006)
 **Package rename completed**: ✓ (org.springframework.samples.petclinic → com.demo)
 
 ## Acceptance Criteria Met
@@ -268,4 +266,4 @@ Commit the specification documents for the S03 domain model migration story.
 - Circular dependency group converted together as required by dependency order ✓
 
 **Story deploy=false**: Acceptance testing deferred to S-AC1 deploy story ✓
-**Legacy UI surface**: Waived in T-007 (domain models have no direct UI exposure) ✓
+**Legacy UI surface**: Waived in T-008 (domain models have no direct UI exposure) ✓
