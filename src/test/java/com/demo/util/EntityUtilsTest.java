@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.demo.model.BaseEntity;
-import com.demo.model.NamedEntity;
+
 
 class EntityUtilsTest {
 
