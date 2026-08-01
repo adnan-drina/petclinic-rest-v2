@@ -18,6 +18,8 @@ package com.demo.repository.springdatajpa;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
+import com.demo.model.Pet;
 import com.demo.model.PetType;
 import com.demo.repository.PetRepository;
 
@@ -28,7 +30,7 @@ import com.demo.repository.PetRepository;
  * @author Vitaliy Fedoriv
  */
 
-public interface SpringDataPetRepository extends PetRepository, PetRepositoryOverride {
+public interface SpringDataPetRepository extends PetRepository, Repository<Pet, Integer>, PetRepositoryOverride {
 
     @Override
     @Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")

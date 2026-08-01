@@ -18,6 +18,7 @@ package com.demo.repository.springdatajpa;
 import java.util.Collection;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import com.demo.model.Owner;
 import com.demo.repository.OwnerRepository;
@@ -29,7 +30,7 @@ import com.demo.repository.OwnerRepository;
  * @since 15.1.2013
  */
 
-public interface SpringDataOwnerRepository extends OwnerRepository {
+public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, Integer> {
 
     @Override
     @Query("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName%")
