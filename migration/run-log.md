@@ -41,4 +41,4 @@ Appended by the Hermes orchestrator after every task (see
 | - task sensor: GREEN (clean test, isolated repo) | | | | |
 | - fidelity sensor: GREEN (harvest fidelity GREEN) | | | | |
 | - sonar sensor: TIMED OUT (60s limit exceeded) | | | | |
-| - Build verification: mvn -q clean verify PASSED | | | | |
+| - Build verification: mvn -q clean verify PASSED | | | | || T-008 | rewrite | 1 | COMPLETED | src/main/java/com/demo/model/Person.java |
