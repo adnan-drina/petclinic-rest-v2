@@ -69,6 +69,7 @@ public class User {
         }
         Role role = new Role();
         role.setName(roleName);
+        role.setUser(this);
         this.roles.add(role);
     }
 }

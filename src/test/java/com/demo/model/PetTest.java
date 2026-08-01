@@ -79,7 +79,8 @@ class PetTest {
         Pet pet = new Pet();
         List<Visit> visits = pet.getVisits();
         Visit visit = new Visit();
-        assertThrows(UnsupportedOperationException.class, () -> visits.add(visit));
+        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class, () -> visits.add(visit));
+        assertNotNull(exception);
     }
 
     @Test

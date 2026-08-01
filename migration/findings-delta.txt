@@ -1,6 +1,6 @@
 # Findings delta (O-DELTABASE — absence ≠ resolved)
 
-METRIC src_main_java=6 src_test_java=3
+METRIC src_main_java=38 src_test_java=9
 METRIC residual_incidents src/main=3 src/test=0 pom=1 props=0 other=0
 SUMMARY resolved=15 absent_not_landed=11 deferred_by_decision=0 scaffold_presatisfied=11 remaining=0 new_after=2 honest_resolve_pct=57.7 in_scope_resolve_pct=57.7
 
