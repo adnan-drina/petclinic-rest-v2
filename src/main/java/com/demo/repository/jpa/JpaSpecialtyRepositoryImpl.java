@@ -66,8 +66,8 @@ public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 	public void delete(Specialty specialty) throws PersistenceException {
 		this.em.remove(this.em.contains(specialty) ? specialty : this.em.merge(specialty));
 		Integer specId = specialty.getId();
-		this.em.createNativeQuery("DELETE FROM vet_specialties WHERE specialty_id=" + specId).executeUpdate();
-		this.em.createQuery("DELETE FROM Specialty specialty WHERE id=" + specId).executeUpdate();
+		this.em.createNativeQuery("DELETE FROM vet_specialties WHERE specialty_id = :specId").setParameter("specId", specId).executeUpdate();
+		this.em.createQuery("DELETE FROM Specialty specialty WHERE id = :specId").setParameter("specId", specId).executeUpdate();
 	}
 
 }

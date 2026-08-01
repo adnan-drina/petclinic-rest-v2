@@ -72,15 +72,15 @@ public class JpaPetTypeRepositoryImpl implements PetTypeRepository {
 		this.em.remove(this.em.contains(petType) ? petType : this.em.merge(petType));
 		Integer petTypeId = petType.getId();
 		
-		List<Pet> pets = this.em.createQuery("SELECT pet FROM Pet pet WHERE type_id=" + petTypeId).getResultList();
+		List<Pet> pets = this.em.createQuery("SELECT pet FROM Pet pet WHERE type_id = :petTypeId").setParameter("petTypeId", petTypeId).getResultList();
 		for (Pet pet : pets){
 			List<Visit> visits = pet.getVisits();
 			for (Visit visit : visits){
-				this.em.createQuery("DELETE FROM Visit visit WHERE id=" + visit.getId()).executeUpdate();
+				this.em.createQuery("DELETE FROM Visit visit WHERE id = :visitId").setParameter("visitId", visit.getId()).executeUpdate();
 			}
-			this.em.createQuery("DELETE FROM Pet pet WHERE id=" + pet.getId()).executeUpdate();
+			this.em.createQuery("DELETE FROM Pet pet WHERE id = :petId").setParameter("petId", pet.getId()).executeUpdate();
 		}
-		this.em.createQuery("DELETE FROM PetType pettype WHERE id=" + petTypeId).executeUpdate();
+		this.em.createQuery("DELETE FROM PetType pettype WHERE id = :petTypeId").setParameter("petTypeId", petTypeId).executeUpdate();
 	}
 
 }
