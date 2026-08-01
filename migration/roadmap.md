@@ -2,7 +2,7 @@
 
 ## S01: Platform Foundation
 - scope: pom.xml, src/main/resources/application.properties
-- findings: javaee-pom-to-quarkus-00010, javaee-pom-to-quarkus-00020, javaee-pom-to-quarkus-00030, javaee-pom-to-quarkus-00040, javaee-pom-to-quarkus-00050, javaee-pom-to-quarkus-00060, springboot-parent-pom-to-quarkus-00000, springboot-plugins-to-quarkus-0000, springboot-annotations-to-quarkus-00000, springboot-properties-to-quarkus-00002, springboot-properties-to-quarkus-00003, springboot-properties-to-quarkus-00000, springboot-properties-to-quarkus-00001, springboot-actuator-to-quarkus-0100, springboot-cache-to-quarkus-00000, springboot-jpa-to-quarkus-00000, springboot-metrics-to-quarkus-0100, springboot-di-to-quarkus-00000, springboot-di-to-quarkus-00002, spring-components-00001, spring-components-00002, localhost-jdbc-00002
+- findings: javaee-pom-to-quarkus-00010, javaee-pom-to-quarkus-00020, javaee-pom-to-quarkus-00030, javaee-pom-to-quarkus-00040, javaee-pom-to-quarkus-00050, javaee-pom-to-quarkus-00060, springboot-parent-pom-to-quarkus-00000, springboot-plugins-to-quarkus-0000, springboot-annotations-to-quarkus-00000, springboot-properties-to-quarkus-00002, springboot-properties-to-quarkus-00003, springboot-properties-to-quarkus-00000, springboot-properties-to-quarkus-00001, springboot-actuator-to-quarkus-0100, springboot-cache-to-quarkus-00000, springboot-jpa-to-quarkus-00000, springboot-metrics-to-quarkus-0100, springboot-di-to-quarkus-00000, spring-components-00001, spring-components-00002, localhost-jdbc-00002
 - depends: -
 - deploy: false
 - done: Quarkus platform configured with proper BOM, plugins, and basic properties migrated
@@ -50,7 +50,7 @@
 
 ## S07: Security & Infrastructure
 - scope: src/main/java/org/springframework/samples/petclinic/security/BasicAuthenticationConfig.java, src/main/java/org/springframework/samples/petclinic/security/DisableSecurityConfig.java, src/main/java/org/springframework/samples/petclinic/security/Roles.java, src/main/java/org/springframework/samples/petclinic/util/ApplicationSwaggerConfig.java, src/main/java/org/springframework/samples/petclinic/util/CallMonitoringAspect.java
-- findings: springboot-jmx-to-quarkus-00001, springboot-security-to-quarkus-00000, springboot-webmvc-to-quarkus-00000, springboot-metrics-to-quarkus-0200
+- findings: springboot-di-to-quarkus-00002, springboot-jmx-to-quarkus-00001, springboot-security-to-quarkus-00000, springboot-webmvc-to-quarkus-00000, springboot-metrics-to-quarkus-0200
 - depends: S06
 - deploy: true
 - done: Security converted to Quarkus Security/JDBC auth, JMX replaced with Micrometer, Swagger replaced with SmallRye OpenAPI
