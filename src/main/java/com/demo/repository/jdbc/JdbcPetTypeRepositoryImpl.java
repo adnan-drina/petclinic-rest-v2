@@ -101,8 +101,7 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 	public void delete(PetType petType) throws DataAccessException {
 		Map<String, Object> petTypeParams = new HashMap<>();
 		petTypeParams.put("id", petType.getId());
-		List<Pet> pets = new ArrayList<>();
-		pets = this.namedParameterJdbcTemplate.
+		List<Pet> pets = this.namedParameterJdbcTemplate.
     			query("SELECT pets.id, name, birth_date, type_id, owner_id FROM pets WHERE type_id=:id",
     			petTypeParams,
     			BeanPropertyRowMapper.newInstance(Pet.class));
@@ -110,8 +109,7 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 		for (Pet pet : pets){
 			Map<String, Object> petParams = new HashMap<>();
 			petParams.put("id", pet.getId());
-			List<Visit> visits = new ArrayList<>();
-			visits = this.namedParameterJdbcTemplate.query(
+			List<Visit> visits = this.namedParameterJdbcTemplate.query(
 		            "SELECT id, pet_id, visit_date, description FROM visits WHERE pet_id = :id",
 		            petParams,
 		            BeanPropertyRowMapper.newInstance(Visit.class));

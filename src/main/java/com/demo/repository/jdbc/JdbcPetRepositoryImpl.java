@@ -38,7 +38,6 @@ import com.demo.model.PetType;
 import com.demo.model.Visit;
 import com.demo.repository.OwnerRepository;
 import com.demo.repository.PetRepository;
-import com.demo.repository.VisitRepository;
 import com.demo.util.EntityUtils;
 import com.demo.util.ObjectRetrievalFailureException;
 
