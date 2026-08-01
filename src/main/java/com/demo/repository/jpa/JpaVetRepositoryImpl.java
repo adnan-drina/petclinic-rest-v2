@@ -15,9 +15,8 @@
  */
 package com.demo.repository.jpa;
 
-import jakarta.inject.Inject;
-
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import jakarta.persistence.PersistenceException;
 import com.demo.model.Vet;
@@ -38,10 +37,11 @@ import java.util.Collection;
 @ApplicationScoped
 public class JpaVetRepositoryImpl implements VetRepository {
 
-    @Inject
-    private EntityManager em;
+    private final EntityManager em;
 
-   
+    public JpaVetRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
 	@Override
 	public Vet findById(int id) throws PersistenceException {
 		return this.em.find(Vet.class, id);
@@ -54,6 +54,7 @@ public class JpaVetRepositoryImpl implements VetRepository {
 	}
 
 	@Override
+	@Transactional
 	public void save(Vet vet) throws PersistenceException {
         if (vet.getId() == null) {
             this.em.persist(vet);
@@ -63,6 +64,7 @@ public class JpaVetRepositoryImpl implements VetRepository {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Vet vet) throws PersistenceException {
 		this.em.remove(this.em.contains(vet) ? vet : this.em.merge(vet));
 	}

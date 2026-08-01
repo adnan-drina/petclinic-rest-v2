@@ -15,9 +15,8 @@
  */
 package com.demo.repository.jpa;
 
-import jakarta.inject.Inject;
-
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.Collection;
 
@@ -40,10 +39,11 @@ import com.demo.repository.OwnerRepository;
 @ApplicationScoped
 public class JpaOwnerRepositoryImpl implements OwnerRepository {
 
-    @Inject
-    private EntityManager em;
+    private final EntityManager em;
 
-
+    public JpaOwnerRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
     /**
      * Important: in the current version of this method, we load Owners with all their Pets and Visits while
      * we do not need Visits at all and we only need one property from the Pet objects (the 'name' property).
@@ -71,6 +71,7 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
 
 
     @Override
+    @Transactional
     public void save(Owner owner) {
         if (owner.getId() == null) {
             this.em.persist(owner);
@@ -88,6 +89,7 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Owner owner) throws PersistenceException {
 		this.em.remove(this.em.contains(owner) ? owner : this.em.merge(owner));
 	}

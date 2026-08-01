@@ -16,9 +16,8 @@
 
 package com.demo.repository.jpa;
 
-import jakarta.inject.Inject;
-
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.Collection;
 
@@ -35,10 +34,12 @@ import com.demo.repository.SpecialtyRepository;
 
 @ApplicationScoped
 public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
-	
-    @Inject
-    private EntityManager em;
 
+    private final EntityManager em;
+
+    public JpaSpecialtyRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
 	@Override
 	public Specialty findById(int id) {
 		return this.em.find(Specialty.class, id);
@@ -51,6 +52,7 @@ public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 	}
 
 	@Override
+	@Transactional
 	public void save(Specialty specialty) throws PersistenceException {
 		if (specialty.getId() == null) {
             this.em.persist(specialty);
@@ -60,6 +62,7 @@ public class JpaSpecialtyRepositoryImpl implements SpecialtyRepository {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Specialty specialty) throws PersistenceException {
 		this.em.remove(this.em.contains(specialty) ? specialty : this.em.merge(specialty));
 		Integer specId = specialty.getId();

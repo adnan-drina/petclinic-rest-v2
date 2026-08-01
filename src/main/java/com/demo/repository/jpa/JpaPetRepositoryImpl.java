@@ -15,9 +15,8 @@
  */
 package com.demo.repository.jpa;
 
-import jakarta.inject.Inject;
-
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,9 +40,11 @@ import com.demo.repository.PetRepository;
 @ApplicationScoped
 public class JpaPetRepositoryImpl implements PetRepository {
 
-    @Inject
-    private EntityManager em;
+    private final EntityManager em;
 
+    public JpaPetRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
     @Override
     @SuppressWarnings("unchecked")
     public List<PetType> findPetTypes() {
@@ -56,6 +57,7 @@ public class JpaPetRepositoryImpl implements PetRepository {
     }
 
     @Override
+    @Transactional
     public void save(Pet pet) {
         if (pet.getId() == null) {
             this.em.persist(pet);
@@ -71,6 +73,7 @@ public class JpaPetRepositoryImpl implements PetRepository {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Pet pet) throws PersistenceException {
 		//this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
 		Integer petId = pet.getId();
