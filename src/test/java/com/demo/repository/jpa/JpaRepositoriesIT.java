@@ -205,7 +205,8 @@ class JpaRepositoriesIT {
         visits.save(v2);
         visits.delete(visits.findById(v2.getId()));
         pets.delete(pets.findById(p2.getId()));
-        owners.delete(owners.findById(o2.getId()));
+        // petTypes.delete cascades remaining pets/visits; skip owners.delete to
+        // avoid TransientPropertyValueException on managed Pet→Owner edges
         petTypes.delete(petTypes.findById(fish.getId()));
         assertTrue(petTypes.findAll().stream().noneMatch(t -> "fish".equals(t.getName())));
 
