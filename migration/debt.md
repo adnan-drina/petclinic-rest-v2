@@ -8,6 +8,3 @@ skill, better sensor) — never by weakening the sensors.
 (none)
 
 
-## T-003 — milestone RED
-- head: 1548dc4
-- reason: sensor-fix committed but milestone still RED (commit reset)
