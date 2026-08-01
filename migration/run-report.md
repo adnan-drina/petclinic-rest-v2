@@ -3,11 +3,11 @@
 ## Executive summary
 
 Autonomous migration of petclinic-rest-v2:
-factory not passed (build=0 gate=1 deploy=0 rounds). Findings delta and per-task detail: migration/run-log.md;
+story gate passed (non-deploy story): pipeline + quality gate green. Findings delta and per-task detail: migration/run-log.md;
 debt: migration/debt.md. Orchestrator custom:maas-m2/minimax-m2,
-worker qwen27b/qwen3-6-27b, 44 model sessions.
+worker qwen27b/qwen3-6-27b, 45 model sessions.
 
-- Outcome: factory not passed (build=0 gate=1 deploy=0 rounds)
+- Outcome: story gate passed (non-deploy story): pipeline + quality gate green
 - Supervisor version: 0ca6de81; run base: 597d44fa1a071d3837fa46a122b4b6792bb5a4f8
 - Orchestrator: custom:maas-m2/minimax-m2; worker: qwen27b/qwen3-6-27b
 
@@ -59,6 +59,7 @@ worker qwen27b/qwen3-6-27b, 44 model sessions.
 | preflightfix-r2-a2p0 | 16 | rc=137 |
 | gatefix-r1-a1p0 | 26 | rc=137 |
 | gatefix-r1-a2p0 | 43 | rc=137 |
+| retro | 19 | rc=137 |
 
 - Escalations (KPI, from supervisor events): 0 (untested: 0)
 
@@ -75,11 +76,11 @@ worker qwen27b/qwen3-6-27b, 44 model sessions.
       6 rule:javax-to-jakarta-import-00001
       6 already_complete
       4 style_autofix
+      4 story_gate_pass
       4 rule:springboot-di-to-quarkus-00003
-      3 story_gate_pass
+      4 pipeline_succeeded
       3 sensor_gate_refuse_checkpoint
       3 rule:transaction-to-quarkus-00003
-      3 pipeline_succeeded
       3 debt_recorded
       2 worker_wedge_class
       2 sfix_committed_still_red
@@ -89,6 +90,7 @@ worker qwen27b/qwen3-6-27b, 44 model sessions.
       2 mechanical_commit
       1 sfix_spring_reintro
       1 sensor_red_at_entry
+      1 debt_retained
       1 commit_hygiene_reset
 ```
 
