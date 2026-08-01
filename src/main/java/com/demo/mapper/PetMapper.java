@@ -11,7 +11,8 @@ import java.util.Collection;
 /**
  * Map Pet & PetDto using mapstruct
  */
-@Mapper(componentModel = "jakarta-cdi")public interface PetMapper {
+@Mapper(componentModel = "jakarta-cdi")
+public interface PetMapper {
     PetDto toPetDto(Pet pet);
 
     Collection<PetDto> toPetsDto(Collection<Pet> pets);
