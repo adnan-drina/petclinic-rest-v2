@@ -1,8 +1,8 @@
 # Findings delta (O-DELTABASE — absence ≠ resolved)
 
-METRIC src_main_java=38 src_test_java=9
-METRIC residual_incidents src/main=3 src/test=0 pom=1 props=0 other=0
-SUMMARY resolved=15 absent_not_landed=11 deferred_by_decision=0 scaffold_presatisfied=11 remaining=0 new_after=2 honest_resolve_pct=57.7 in_scope_resolve_pct=57.7
+METRIC src_main_java=79 src_test_java=15
+METRIC residual_incidents src/main=10 src/test=0 pom=2 props=0 other=0
+SUMMARY resolved=17 absent_not_landed=7 deferred_by_decision=0 scaffold_presatisfied=10 remaining=3 new_after=2 honest_resolve_pct=63.0 in_scope_resolve_pct=63.0
 
 ## RESOLVED (landed evidence + rule absent after)
 - hibernate-00005
@@ -10,11 +10,13 @@ SUMMARY resolved=15 absent_not_landed=11 deferred_by_decision=0 scaffold_presati
 - javax-to-jakarta-dependencies-00001
 - javax-to-jakarta-dependencies-00003
 - javax-to-jakarta-import-00001
+- persistence-to-quarkus-00010
 - spring-components-00001
 - spring-components-00002
 - springboot-actuator-to-quarkus-0100
 - springboot-cache-to-quarkus-00000
 - springboot-devservices-to-quarkus-00000
+- springboot-di-to-quarkus-00003
 - springboot-jpa-to-quarkus-00000
 - springboot-metrics-to-quarkus-0100
 - springboot-metrics-to-quarkus-0200
@@ -22,17 +24,13 @@ SUMMARY resolved=15 absent_not_landed=11 deferred_by_decision=0 scaffold_presati
 - springboot-security-to-quarkus-00000
 
 ## ABSENT-NOT-LANDED (do NOT credit as resolved — nothing in src/)
-- localhost-jdbc-00002
 - oracle2openjdk-00006
-- persistence-to-quarkus-00010
 - springboot-annotations-to-quarkus-00002
 - springboot-di-to-quarkus-00002
-- springboot-di-to-quarkus-00003
 - springboot-jmx-to-quarkus-00001
 - springboot-properties-to-quarkus-00001
 - springboot-properties-to-quarkus-00002
 - springboot-webmvc-to-quarkus-00000
-- transaction-to-quarkus-00003
 
 ## DEFERRED-BY-DECISION (O-LEDGERFALSE — excluded from in-scope denom)
 - (none)
@@ -44,17 +42,18 @@ SUMMARY resolved=15 absent_not_landed=11 deferred_by_decision=0 scaffold_presati
 - javaee-pom-to-quarkus-00040
 - javaee-pom-to-quarkus-00050
 - springboot-annotations-to-quarkus-00000
-- springboot-di-to-quarkus-00000
 - springboot-parent-pom-to-quarkus-00000
 - springboot-plugins-to-quarkus-0000
 - springboot-properties-to-quarkus-00000
 - springboot-web-to-quarkus-00000
 
 ## REMAINING (still in after-scan)
-- (none)
+- localhost-jdbc-00002
+- springboot-di-to-quarkus-00000
+- transaction-to-quarkus-00003
 
 ## NEW IN AFTER (not in before)
 - demo-env-integration-00001
 - jakarta-jaxrs-to-quarkus-00010
 
-DELTABASE:resolved=15:absent=11:deferred=0:presat=11:remaining=0
+DELTABASE:resolved=17:absent=7:deferred=0:presat=10:remaining=3
