@@ -54,7 +54,7 @@ public abstract class EntityUtils {
     /**
      * Utility classes should not have a public or default constructor.
      */
-    private EntityUtils() {
+    EntityUtils() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
