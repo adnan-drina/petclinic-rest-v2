@@ -37,7 +37,7 @@ import jakarta.transaction.Transactional;
  * QuarkusTest coverage for primary CDI JPA repository implementations (H2 %test).
  */
 @QuarkusTest
-class JpaRepositoriesIT {
+class JpaRepositoriesTest {
 
     @Inject
     OwnerRepository owners;

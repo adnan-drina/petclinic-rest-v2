@@ -191,6 +191,12 @@
         <configuration>
           <!-- O-JACOCOARGLINE: without this, plain JUnit never hits jacoco-quarkus.exec -->
           <argLine>@{argLine}</argLine>
+          <!-- O-SUREFIREIT: default surefire patterns skip *IT.java; QuarkusTest often uses IT suffix -->
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+            <include>**/*IT.java</include>
+          </includes>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
           </systemPropertyVariables>
