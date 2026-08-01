@@ -18,7 +18,6 @@ package com.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -82,9 +81,8 @@ public class Pet extends NamedEntity {
     }
 
     public List<Visit> getVisits() {
-        List<Visit> sortedVisits = getVisitsInternal().stream()
-            .sorted(Comparator.comparing(Visit::getDate))
-            .collect(Collectors.toList());
+        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
+        Collections.sort(sortedVisits, Comparator.comparing(Visit::getDate));
         return Collections.unmodifiableList(sortedVisits);
     }
 
