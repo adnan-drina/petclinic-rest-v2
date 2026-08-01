@@ -20,6 +20,8 @@
     <quarkus.platform.group-id>com.redhat.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>3.27.3.SP1-redhat-00002</quarkus.platform.version>
     <surefire-plugin.version>3.5.3</surefire-plugin.version>
+    <!-- O-JACOCOARGLINE: jacoco prepare-agent fills argLine; surefire must consume it -->
+    <argLine></argLine>
     <!-- Both report locations: quarkus-jacoco writes the first for
          @QuarkusTest runs; jacoco-maven-plugin writes the second for plain
          JUnit tests (migration model/unit tests). Sonar imports whichever
@@ -187,6 +189,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
         <configuration>
+          <!-- O-JACOCOARGLINE: without this, plain JUnit never hits jacoco-quarkus.exec -->
+          <argLine>@{argLine}</argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
           </systemPropertyVariables>
