@@ -56,6 +56,10 @@ HARNESS=.hermes/harness
 SKILLDIR=.hermes/skills/migration-harness
 # L-P1: OUTER_LOOP_PLAIN=1 for terminals that mangle unicode markers
 PLAIN="${OUTER_LOOP_PLAIN:-0}"
+# O-PKEXAMPLE: package rename examples from migration.yaml (not Coolstore literals).
+LEGACY_PKG=$(python3 -c "import re; t=open('migration.yaml').read(); m=re.search(r'legacyPackage:\s*(\S+)',t); print(m.group(1) if m else 'LEGACY_PKG')" 2>/dev/null || echo LEGACY_PKG)
+TARGET_PKG=$(python3 -c "import re; t=open('migration.yaml').read(); m=re.search(r'targetPackage:\s*(\S+)',t); print(m.group(1) if m else 'TARGET_PKG')" 2>/dev/null || echo TARGET_PKG)
+PKG_RENAME_HINT="PACKAGE RENAME: full prefix ${LEGACY_PKG}.X → ${TARGET_PKG}.X (from migration.yaml); never invent ${TARGET_PKG}.coolstore or other specimen leftovers."
 
 # Demo-facing model labels (codes alone are not enough — V6 logging notes).
 orch_label() {
@@ -135,11 +139,15 @@ mchat() { # $1=tag $2=prompt [$3=phase title for heartbeats]
 }
 
 # O-M3WORKER: OpenCode/Qwen seat for M3 SPECIFY (plan-lint gated).
+# O-M3EMPTY: set M3_EXPECT_TASKS=specs/<slug>/tasks.md before wchat; if still
+# missing after M3_EMPTY_ABORT_SECS (default 720), abort the seat and return 1
+# so the attempt is spent (unlike O-M3KILL 137/143).
 wchat() { # $1=tag $2=prompt [$3=phase title] [$4=extra -f file ...]
-  local tag="$1" prompt="$2" title="${3:-$1}" t0 now rc hb_pid slog
+  local tag="$1" prompt="$2" title="${3:-$1}" t0 now rc hb_pid slog tp watch_pid
   shift 3 || true
   t0=$(date +%s)
   slog="/tmp/outer-${tag}.log"
+  rm -f "/tmp/m3-empty-abort-${tag}"
   log "         Actor: $(worker_label) — session ${tag} → ${slog}"
   _outer_heartbeat_start "$title" "$t0" "$slog" worker
   # shellcheck disable=SC2086
@@ -148,8 +156,30 @@ wchat() { # $1=tag $2=prompt [$3=phase title] [$4=extra -f file ...]
     -f AGENTS.md \
     -f "${SKILLDIR}/PLANNING.md" \
     "$@" \
-    < /dev/null > "$slog" 2>&1
+    < /dev/null > "$slog" 2>&1 &
+  tp=$!
+  watch_pid=""
+  if [ -n "${M3_EXPECT_TASKS:-}" ]; then
+    (
+      abort_s="${M3_EMPTY_ABORT_SECS:-720}"
+      sleep "$abort_s"
+      if [ ! -f "$M3_EXPECT_TASKS" ]; then
+        echo "[$(date -u +%F' '%T)]          O-M3EMPTY: abort — ${M3_EXPECT_TASKS} missing after ${abort_s}s" >> "$LOG"
+        touch "/tmp/m3-empty-abort-${tag}"
+        kill "$tp" 2>/dev/null || true
+      fi
+    ) &
+    watch_pid=$!
+  fi
+  wait "$tp"
   rc=$?
+  if [ -n "$watch_pid" ]; then
+    kill "$watch_pid" 2>/dev/null || true
+    wait "$watch_pid" 2>/dev/null || true
+  fi
+  if [ -f "/tmp/m3-empty-abort-${tag}" ]; then
+    rc=1
+  fi
   kill "$hb_pid" 2>/dev/null || true
   wait "$hb_pid" 2>/dev/null || true
   now=$(date +%s)
@@ -249,8 +279,8 @@ if roadmap_green; then
 else
   for ATTEMPT in 1 2; do
     phase_start "M2 SEQUENCE — cut migration into dependency-ordered stories [attempt ${ATTEMPT}/2]"
-    P="Use the migration-harness skill and read SEQUENCING.md and BRIEF-TEMPLATE.md in its directory. M1 is committed. Execute M2 ONLY: read migration/architecture-profile.md, migration/dependency-order.md, migration/findings-inventory.md and migration.yaml, then write migration/roadmap.md plus one brief per story under migration/briefs/ exactly per SEQUENCING.md. Each brief carries its classes' roles and, for REDESIGN classes, their target contract from architecture-profile section 7 (SEQUENCING.md 'One quality model'). Every 'In scope' code quote is the REAL legacy code — quote it from /projects/legacy, never invent methods or annotations the class does not have (the lint cross-checks each quoted method/annotation against the legacy source). A deterministic lint gates the result — verify yourself with: python3 ${HARNESS}/roadmap-lint.py migration/roadmap.md migration/findings-inventory.md /projects/legacy (must exit 0) BEFORE committing. Finish with ONE commit whose message STARTS with 'M2 sequence:'. DO NOT PUSH. PACKAGE RENAME: full prefix legacyPackage→targetPackage (com.redhat.coolstore.X → com.demo.X); never invent com.demo.coolstore."
-    [ "$ATTEMPT" = "2" ] && P="Use the migration-harness skill and read SEQUENCING.md in its directory. A previous M2 attempt failed its lint — the findings are in /tmp/roadmap-lint.txt (read it with your file tools). LINT:fabrication findings mean the brief quoted a method/annotation that is NOT in the legacy source — read the real class under /projects/legacy and quote what is actually there. Fix every lint finding in migration/roadmap.md and the briefs, verify python3 ${HARNESS}/roadmap-lint.py migration/roadmap.md migration/findings-inventory.md /projects/legacy exits 0, and commit with prefix 'M2 sequence:'. DO NOT PUSH."
+    P="Use the migration-harness skill and read SEQUENCING.md and BRIEF-TEMPLATE.md in its directory. M1 is committed. Execute M2 ONLY: read migration/architecture-profile.md, migration/dependency-order.md, migration/findings-inventory.md and migration.yaml, then write migration/roadmap.md plus one brief per story under migration/briefs/ exactly per SEQUENCING.md. Each brief carries its classes' roles and, for REDESIGN classes, their target contract from architecture-profile section 7 (SEQUENCING.md 'One quality model'). Every 'In scope' code quote is the REAL legacy code — quote it from /projects/legacy, never invent methods or annotations the class does not have (the lint cross-checks each quoted method/annotation against the legacy source). Each mandatory finding id in exactly ONE story (no LINT:coverage dual-owner); story scope must list real code/test paths (no ceremonial name-only scopes); last story deploy=true; do not claim recipe-executed findings. A deterministic lint gates the result — verify yourself with: python3 ${HARNESS}/roadmap-lint.py migration/roadmap.md migration/findings-inventory.md /projects/legacy (must exit 0) BEFORE committing. Finish with ONE commit whose message STARTS with 'M2 sequence:'. DO NOT PUSH. ${PKG_RENAME_HINT}"
+    [ "$ATTEMPT" = "2" ] && P="Use the migration-harness skill and read SEQUENCING.md in its directory. A previous M2 attempt failed its lint — the findings are in /tmp/roadmap-lint.txt (read it with your file tools). LINT:fabrication = quote real legacy methods/annotations only. LINT:coverage dual-owner / orphan = each mandatory finding in exactly one story; remove duplicate claims and out-of-place scope paths. LINT:substance ceremonial = every story scope lists real code/test paths. LINT:deploy = last story deploy=true. Fix every lint finding in migration/roadmap.md and the briefs, verify python3 ${HARNESS}/roadmap-lint.py migration/roadmap.md migration/findings-inventory.md /projects/legacy exits 0, and commit with prefix 'M2 sequence:'. DO NOT PUSH. ${PKG_RENAME_HINT}"
     mchat "m2-sequence-a${ATTEMPT}" "$P" "M2 SEQUENCE"
     if roadmap_green; then
       [ -n "$(git status --porcelain migration/)" ] && git add migration/ && git commit -q -m "M2 sequence: outer-loop mechanical commit of lint-green roadmap" 2>/dev/null
@@ -324,9 +354,14 @@ while IFS='|' read -r SID DEPLOY FINDINGS SCOPE; do
     # O-M3KILL: SIGKILL must NOT spend an attempt.
     m3_build_prompt() { # $1=fresh|fix — sets P from brief or plan-lint RED fix
       local mode="${1:-fresh}"
-      P="Use the migration-harness skill and read PLANNING.md in its directory. Execute M3 ONLY for story ${SID}: read the brief ${BRIEF} (it is authoritative — the decided shapes and contracts are IN it), migration/architecture-profile.md for context, and the legacy code it cites under /projects/legacy. Write specs/${SLUG}/spec.md, plan.md and tasks.md per PLANNING.md, scoped STRICTLY to this story. A deterministic lint gates the plan — verify yourself with: ${M3_LINT_CMD} (must exit 0) BEFORE committing. Finish with ONE commit whose message STARTS with '${SID} spec:'. DO NOT PUSH. PACKAGE RENAME: full prefix legacyPackage→targetPackage only (never targetPackage.coolstore when targetPackage is com.demo). ACCEPTANCE (O-M3ACCEPT): story deploy=${DEPLOY}. If deploy=false, do NOT task migration.yaml acceptance.path with a Java @Path/endpoint — defer to the deploy story (S-AC1/G-OK); omitting the path from tasks is OK. If deploy=true, task the full literal acceptance.path with real @Path substance (no MinimalAcceptanceEndpoint / status-map placeholders)."
+      # O-M3EMPTY: if tasks.md never landed, always use fresh create prompt —
+      # "fix specs/<slug>/" misleads when the directory does not exist.
+      if [ "$mode" = "fix" ] && [ ! -f "specs/${SLUG}/tasks.md" ]; then
+        mode=fresh
+      fi
+      P="Use the migration-harness skill and read PLANNING.md in its directory. Execute M3 ONLY for story ${SID}: read the brief ${BRIEF} (it is authoritative — the decided shapes and contracts are IN it), migration/architecture-profile.md for context, and the legacy code it cites under /projects/legacy. Write specs/${SLUG}/spec.md, plan.md and tasks.md per PLANNING.md, scoped STRICTLY to this story (create the directory if missing). A deterministic lint gates the plan — verify yourself with: ${M3_LINT_CMD} (must exit 0) BEFORE committing. Finish with ONE commit whose message STARTS with '${SID} spec:'. DO NOT PUSH. ${PKG_RENAME_HINT} ACCEPTANCE (O-M3ACCEPT): story deploy=${DEPLOY}. If deploy=false, do NOT task migration.yaml acceptance.path with a Java @Path/endpoint — defer to the deploy story (S-AC1/G-OK); omitting the path from tasks is OK. If deploy=true, task the full literal acceptance.path with real @Path substance (no MinimalAcceptanceEndpoint / status-map placeholders)."
       if [ "$mode" = "fix" ]; then
-        P="Use the migration-harness skill and read PLANNING.md in its directory. A previous M3 attempt for ${SID} left a plan that fails plan-lint — the findings are in /tmp/plan-lint.txt (read it with your file tools). Fix every finding in specs/${SLUG}/, verify ${M3_LINT_CMD} exits 0, and commit with prefix '${SID} spec:'. DO NOT PUSH. ACCEPTANCE (O-M3ACCEPT): deploy=${DEPLOY} — if false, do not schedule endpoint substance for acceptance.path; if true, task the full literal path with real @Path (no status-map / MinimalAcceptanceEndpoint)."
+        P="Use the migration-harness skill and read PLANNING.md in its directory. A previous M3 attempt for ${SID} left a plan that fails plan-lint — the findings are in /tmp/plan-lint.txt (read it with your file tools). Fix every finding in specs/${SLUG}/ (create specs/${SLUG}/{spec,plan,tasks}.md from the brief if tasks.md is missing), verify ${M3_LINT_CMD} exits 0, and commit with prefix '${SID} spec:'. DO NOT PUSH. ${PKG_RENAME_HINT} ACCEPTANCE (O-M3ACCEPT): deploy=${DEPLOY} — if false, do not schedule endpoint substance for acceptance.path; if true, task the full literal path with real @Path (no status-map / MinimalAcceptanceEndpoint)."
       fi
     }
     m3_lint_green() {
@@ -365,10 +400,22 @@ while IFS='|' read -r SID DEPLOY FINDINGS SCOPE; do
         phase_start "M3 SPECIFY — plan story ${SLUG} (${STORY_IDX}/${STORY_COUNT}) [worker attempt ${ATTEMPT}/${M3_WORKER_ATTEMPTS}]"
         log "         O-M3WORKER: draft/fix via $(worker_label) (plan-lint verifier; MiniMax backstop if still RED)"
         SPEC_TASKS=$(ls specs/${SID}-*/tasks.md 2>/dev/null | head -1)
-        if [ "$ATTEMPT" -gt 1 ] || [ -n "$SPEC_TASKS" ]; then m3_build_prompt fix; else m3_build_prompt fresh; fi
+        # O-M3EMPTY: attempt>1 with no tasks.md must stay on fresh create, not fix.
+        if [ -n "$SPEC_TASKS" ]; then m3_build_prompt fix; else m3_build_prompt fresh; fi
+        M3_EXPECT_TASKS="specs/${SLUG}/tasks.md"
+        export M3_EXPECT_TASKS
         wchat "m3-${SID}-w${ATTEMPT}" "$P" "M3 SPECIFY ${SID} (worker)" \
           -f "$BRIEF" -f migration/architecture-profile.md
         mchat_rc=$?
+        unset M3_EXPECT_TASKS
+        if [ -f "/tmp/m3-empty-abort-m3-${SID}-w${ATTEMPT}" ]; then
+          log "         O-M3EMPTY: worker produced no tasks.md — attempt ${ATTEMPT} spent (early abort)"
+          m3_write_lint_evidence
+          phase_gate "M3 SPECIFY ${SID} plan-lint" RED "O-M3EMPTY early abort — /tmp/plan-lint.txt"
+          phase_retry "M3 SPECIFY ${SID} — empty write; advancing"
+          ATTEMPT=$((ATTEMPT + 1))
+          continue
+        fi
         if [ "$mchat_rc" -eq 137 ] || [ "$mchat_rc" -eq 143 ]; then
           log "         O-M3KILL: worker M3 killed (rc=${mchat_rc}) — attempt ${ATTEMPT} NOT spent"
           phase_retry "M3 SPECIFY ${SID} — worker session killed; not counting as lint fail"

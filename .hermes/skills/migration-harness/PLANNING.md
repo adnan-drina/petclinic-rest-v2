@@ -5,6 +5,13 @@ cite the catalog, do not re-derive architecture per run. `tasks.md` MUST
 follow [TASKS-TEMPLATE.md](TASKS-TEMPLATE.md) — the supervisor's plan
 lint bounces non-conforming plans.
 
+**O-M3EMPTY — write artifacts first.** Do not spend the session only
+reading. Within the first tool batch: `mkdir -p specs/<slug>/` and
+**write** `spec.md`, `plan.md`, and `tasks.md` (stubs OK, then refine).
+An empty `specs/<slug>/` directory or a session with zero writes fails
+plan-lint (`tasks.md missing entirely`) and wastes the seat. Verify with
+plan-lint, then one commit `SNN spec:`.
+
 M1 ground truth and the architecture profile live in [ANALYSIS.md](ANALYSIS.md)
 (and `analyze.sh`). This file owns M3. The normalize snippet below is
 kept so whole-app supervisor runs that land here without an outer-loop

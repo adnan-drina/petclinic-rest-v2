@@ -121,6 +121,15 @@ ones) appears in exactly one story's `findings:`. Every `preserve:`
 item is owned by the story whose scope carries its surface (name it in
 that brief).
 
+**Unique ownership (O-M2CEREMONY / LINT:coverage).** Do not list the same
+rule id under two stories. Do not pull an earlier story's classes into a
+later story's `scope:` just to re-claim a finding (e.g. service impls in a
+security story so `springboot-di-to-quarkus-*` appears twice). Put each
+class in the earliest story that modernizes it; later stories may *depend*
+on that work without re-scoping the files. `LINT:coverage: … owned by both`
+is a hard fail — fix by deleting the duplicate finding claim (and any
+out-of-place scope paths), then re-run roadmap-lint before commit.
+
 ## Briefs (`migration/briefs/S<NN>-<slug>.md`)
 
 One per story, following `BRIEF-TEMPLATE.md` in this directory. The
