@@ -156,7 +156,8 @@ Add MapStruct dependencies + `componentModel = "jakarta-cdi"` (O-MAPCDI).
 2. Copy mapper interfaces from legacy/staging to `com.demo.mapper`
 3. Package/import rename: mapper → `com.demo.mapper`, model → `com.demo.model`, dto → `com.demo.dto`
 4. Set `@Mapper(componentModel = "jakarta-cdi", …)` (preserve `uses = …`)
-5. Verify compile GREEN (DTOs from T-005 must already exist — do not invent stubs)
+5. Target shape (architecture profile §7 MapperImpl REDESIGN): CDI-managed MapStruct with refresh-guard for caching; keep interfaces valid under jakarta-cdi
+6. Verify compile GREEN (DTOs from T-005 must already exist — do not invent stubs)
 
 **Verification**: Files compile; MapStruct interfaces intact; task sensor GREEN
 
