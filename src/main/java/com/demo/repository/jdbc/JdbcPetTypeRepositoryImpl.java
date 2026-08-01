@@ -99,12 +99,12 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 
 	@Override
 	public void delete(PetType petType) throws DataAccessException {
-		Map<String, Object> pettypeParams = new HashMap<>();
-		pettypeParams.put("id", petType.getId());
+		Map<String, Object> petTypeParams = new HashMap<>();
+		petTypeParams.put("id", petType.getId());
 		List<Pet> pets = new ArrayList<>();
 		pets = this.namedParameterJdbcTemplate.
     			query("SELECT pets.id, name, birth_date, type_id, owner_id FROM pets WHERE type_id=:id",
-    			pettypeParams,
+    			petTypeParams,
     			BeanPropertyRowMapper.newInstance(Pet.class));
 		// cascade delete pets
 		for (Pet pet : pets){
@@ -123,7 +123,7 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 	        }
 	        this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", petParams);
         }
-        this.namedParameterJdbcTemplate.update("DELETE FROM types WHERE id=:id", pettypeParams);
+        this.namedParameterJdbcTemplate.update("DELETE FROM types WHERE id=:id", petTypeParams);
 	}
 
 }

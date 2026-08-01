@@ -104,7 +104,7 @@ class JpaOwnerRepositoryTest {
     }
 
     @Test
-    void entityManagerIsConstructorInjected() throws NoSuchMethodException {
+    void entityManagerIsConstructorInjected() {
         Constructor<?>[] constructors = JpaOwnerRepositoryImpl.class.getConstructors();
         assertTrue(constructors.length > 0, "Should have at least one constructor");
         

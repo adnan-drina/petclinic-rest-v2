@@ -127,7 +127,9 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 					});
 			for (int specialtyId : vetSpecialtiesIds) {
 				Specialty specialty = EntityUtils.getById(specialties, Specialty.class, specialtyId);
-				vet.addSpecialty(specialty);
+				if (vet != null && specialty != null) {
+					vet.addSpecialty(specialty);
+				}
 			}
 
 		} catch (EmptyResultDataAccessException ex) {
@@ -164,7 +166,7 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 		this.namedParameterJdbcTemplate.update("DELETE FROM vet_specialties WHERE vet_id=:id", params);
 		for (Specialty spec : vet.getSpecialties()) {
 			params.put("spec_id", spec.getId());
-			if(!(spec.getId() == null)) {
+			if (spec.getId() != null) {
 				this.namedParameterJdbcTemplate.update("INSERT INTO vet_specialties VALUES (:id, :spec_id)", params);
 			}
 		}

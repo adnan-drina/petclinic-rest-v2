@@ -141,7 +141,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 
     public Collection<PetType> getPetTypes() throws DataAccessException {
         return this.namedParameterJdbcTemplate.query(
-            "SELECT id, name FROM types ORDER BY name", new HashMap<String, Object>(),
+            "SELECT id, name FROM types ORDER BY name", new HashMap<>(),
             BeanPropertyRowMapper.newInstance(PetType.class));
     }
 
@@ -161,7 +161,7 @@ public class JdbcOwnerRepositoryImpl implements OwnerRepository {
 	public Collection<Owner> findAll() throws DataAccessException {
 		List<Owner> owners = this.namedParameterJdbcTemplate.query(
 	            "SELECT id, first_name, last_name, address, city, telephone FROM owners",
-	            new HashMap<String, Object>(),
+	            new HashMap<>(),
 	            BeanPropertyRowMapper.newInstance(Owner.class));
 		for (Owner owner : owners) {
             loadPetsAndVisits(owner);

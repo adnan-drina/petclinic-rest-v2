@@ -144,9 +144,9 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
         @Override
         public Visit mapRow(ResultSet rs, int rowNum) throws SQLException {
             Visit visit = new Visit();
-            JdbcPet pet = new JdbcPet();
-            PetType petType = new PetType();
-            Owner owner = new Owner();
+            JdbcPet pet;
+            PetType petType;
+            Owner owner;
             visit.setId(rs.getInt("visit_id"));
             Date visitDate = rs.getDate("visit_date");
             visit.setDate(new java.sql.Date(visitDate.getTime()).toLocalDate());
@@ -157,6 +157,9 @@ public class JdbcVisitRepositoryImpl implements VisitRepository {
                 "SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE pets.id=:id",
                 params,
                 new JdbcPetRowMapper());
+            if (pet == null) {
+                throw new EmptyResultDataAccessException(1);
+            }
             params.put("type_id", pet.getTypeId());
             petType = JdbcVisitRepositoryImpl.this.namedParameterJdbcTemplate.queryForObject(
                 "SELECT id, name FROM types WHERE id= :type_id",
