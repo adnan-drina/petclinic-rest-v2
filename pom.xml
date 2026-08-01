@@ -65,7 +65,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
+      <artifactId>quarkus-smallrye-metrics</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -156,4 +156,19 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+      <activation>
+        <property>
+          <name>native</name>
+        </property>
+      </activation>
+      <properties>
+        <quarkus.package.type>native</quarkus.package.type>
+        <quarkus.native.enabled>true</quarkus.native.enabled>
+      </properties>
+    </profile>
+  </profiles>
 </project>
