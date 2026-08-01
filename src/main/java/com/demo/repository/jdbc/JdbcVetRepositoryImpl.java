@@ -106,19 +106,19 @@ public class JdbcVetRepositoryImpl implements VetRepository {
 	public Vet findById(int id) throws DataAccessException {
 		Vet vet;
 		try {
-			Map<String, Object> vet_params = new HashMap<>();
-			vet_params.put("id", id);
+			Map<String, Object> vetParams = new HashMap<>();
+			vetParams.put("id", id);
 			vet = this.namedParameterJdbcTemplate.queryForObject(
 					"SELECT id, first_name, last_name FROM vets WHERE id= :id",
-					vet_params,
+					vetParams,
 					BeanPropertyRowMapper.newInstance(Vet.class));
 
 			final List<Specialty> specialties = this.namedParameterJdbcTemplate.query(
-					"SELECT id, name FROM specialties", vet_params, BeanPropertyRowMapper.newInstance(Specialty.class));
+					"SELECT id, name FROM specialties", vetParams, BeanPropertyRowMapper.newInstance(Specialty.class));
 
 			final List<Integer> vetSpecialtiesIds = this.namedParameterJdbcTemplate.query(
 					"SELECT specialty_id FROM vet_specialties WHERE vet_id=:id",
-					vet_params,
+					vetParams,
 					new BeanPropertyRowMapper<Integer>() {
 						@Override
 						public Integer mapRow(ResultSet rs, int row) throws SQLException {

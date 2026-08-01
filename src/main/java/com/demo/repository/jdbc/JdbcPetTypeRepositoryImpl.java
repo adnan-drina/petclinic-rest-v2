@@ -99,31 +99,31 @@ public class JdbcPetTypeRepositoryImpl implements PetTypeRepository {
 
 	@Override
 	public void delete(PetType petType) throws DataAccessException {
-		Map<String, Object> pettype_params = new HashMap<>();
-		pettype_params.put("id", petType.getId());
-		List<Pet> pets = new ArrayList<Pet>();
+		Map<String, Object> pettypeParams = new HashMap<>();
+		pettypeParams.put("id", petType.getId());
+		List<Pet> pets = new ArrayList<>();
 		pets = this.namedParameterJdbcTemplate.
     			query("SELECT pets.id, name, birth_date, type_id, owner_id FROM pets WHERE type_id=:id",
-    			pettype_params,
+    			pettypeParams,
     			BeanPropertyRowMapper.newInstance(Pet.class));
 		// cascade delete pets
 		for (Pet pet : pets){
-			Map<String, Object> pet_params = new HashMap<>();
-			pet_params.put("id", pet.getId());
-			List<Visit> visits = new ArrayList<Visit>();
+			Map<String, Object> petParams = new HashMap<>();
+			petParams.put("id", pet.getId());
+			List<Visit> visits = new ArrayList<>();
 			visits = this.namedParameterJdbcTemplate.query(
 		            "SELECT id, pet_id, visit_date, description FROM visits WHERE pet_id = :id",
-		            pet_params,
+		            petParams,
 		            BeanPropertyRowMapper.newInstance(Visit.class));
 	        // cascade delete visits
 	        for (Visit visit : visits){
-	        	Map<String, Object> visit_params = new HashMap<>();
-	        	visit_params.put("id", visit.getId());
-	        	this.namedParameterJdbcTemplate.update("DELETE FROM visits WHERE id=:id", visit_params);
+	        	Map<String, Object> visitParams = new HashMap<>();
+	        	visitParams.put("id", visit.getId());
+	        	this.namedParameterJdbcTemplate.update("DELETE FROM visits WHERE id=:id", visitParams);
 	        }
-	        this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", pet_params);
+	        this.namedParameterJdbcTemplate.update("DELETE FROM pets WHERE id=:id", petParams);
         }
-        this.namedParameterJdbcTemplate.update("DELETE FROM types WHERE id=:id", pettype_params);
+        this.namedParameterJdbcTemplate.update("DELETE FROM types WHERE id=:id", pettypeParams);
 	}
 
 }
