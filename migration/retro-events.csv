@@ -1,0 +1,15 @@
+epoch,stage,attempt,class,action
+1785580933,m3-lint,1,success,commit
+1785581144,m3-lint,0,sensor_red_post_commit,verify
+1785581438,m3-lint,0,sfix_worker_first,milestone
+1785581709,m3-lint,0,sfix_minimax_rescue,milestone:1
+1785583207,T-003,0,escalation_cause,worker-failed
+1785583461,T-003,1,success,commit
+1785585120,m5-evaluate,1,no_commit,retrying
+1785585584,m5-evaluate,1,success,commit
+1785585803,m5-ship,0,preflight_red,round=1
+1785585956,preflightfix-r1,1,no_commit,retrying
+1785586180,m5-ship,0,preflight_red,round=1
+1785586688,preflightfix-r1,1,success,commit
+1785587027,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-xjldx
+1785587027,m5-ship,0,story_gate_pass,non-deploy story
