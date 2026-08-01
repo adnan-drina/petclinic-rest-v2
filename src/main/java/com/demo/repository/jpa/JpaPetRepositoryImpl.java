@@ -73,9 +73,9 @@ public class JpaPetRepositoryImpl implements PetRepository {
 	@Override
 	public void delete(Pet pet) throws PersistenceException {
 		//this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
-		String petId = pet.getId().toString();
-		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
-		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
+		Integer petId = pet.getId();
+		this.em.createQuery("DELETE FROM Visit visit WHERE pet.id = :id").setParameter("id", petId).executeUpdate();
+		this.em.createQuery("DELETE FROM Pet pet WHERE id = :id").setParameter("id", petId).executeUpdate();
 		if (em.contains(pet)) {
 			em.remove(pet);
 		}
