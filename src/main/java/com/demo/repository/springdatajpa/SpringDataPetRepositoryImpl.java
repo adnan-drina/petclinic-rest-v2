@@ -40,12 +40,11 @@ public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
 	@Override
 	@Transactional
 	public void delete(Pet pet) {
-		String petId = pet.getId().toString();
-		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
-		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
-        if (em.contains(pet)) {
-            em.remove(pet);
-        }
+		Integer petId = pet.getId();
+		this.em.createQuery("DELETE FROM Visit visit WHERE visit.pet.id = :petId")
+			.setParameter("petId", petId).executeUpdate();
+		Pet managed = em.contains(pet) ? pet : em.merge(pet);
+		em.remove(managed);
 	}
 
 }

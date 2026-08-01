@@ -40,11 +40,8 @@ public class SpringDataVisitRepositoryImpl implements VisitRepositoryOverride {
 	@Override
 	@Transactional
 	public void delete(Visit visit) {
-		String visitId = visit.getId().toString();
-		this.em.createQuery("DELETE FROM Visit visit WHERE id=" + visitId).executeUpdate();
-        if (em.contains(visit)) {
-            em.remove(visit);
-        }
+		Visit managed = em.contains(visit) ? visit : em.merge(visit);
+		em.remove(managed);
 	}
 
 

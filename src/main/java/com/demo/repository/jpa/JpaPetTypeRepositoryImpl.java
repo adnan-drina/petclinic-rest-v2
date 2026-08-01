@@ -69,10 +69,8 @@ public class JpaPetTypeRepositoryImpl implements PetTypeRepository {
 	@Override
 	@Transactional
 	public void delete(PetType petType) throws PersistenceException {
-		this.em.remove(this.em.contains(petType) ? petType : this.em.merge(petType));
 		Integer petTypeId = petType.getId();
-		
-		List<Pet> pets = this.em.createQuery("SELECT pet FROM Pet pet WHERE type_id = :petTypeId").setParameter("petTypeId", petTypeId).getResultList();
+		List<Pet> pets = this.em.createQuery("SELECT pet FROM Pet pet WHERE pet.type.id = :petTypeId").setParameter("petTypeId", petTypeId).getResultList();
 		for (Pet pet : pets){
 			List<Visit> visits = pet.getVisits();
 			for (Visit visit : visits){

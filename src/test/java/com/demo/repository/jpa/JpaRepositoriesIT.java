@@ -23,6 +23,10 @@ import com.demo.repository.SpecialtyRepository;
 import com.demo.repository.UserRepository;
 import com.demo.repository.VetRepository;
 import com.demo.repository.VisitRepository;
+import com.demo.repository.springdatajpa.SpringDataPetRepositoryImpl;
+import com.demo.repository.springdatajpa.SpringDataPetTypeRepositoryImpl;
+import com.demo.repository.springdatajpa.SpringDataSpecialtyRepositoryImpl;
+import com.demo.repository.springdatajpa.SpringDataVisitRepositoryImpl;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -48,6 +52,14 @@ class JpaRepositoriesIT {
     SpecialtyRepository specialties;
     @Inject
     UserRepository users;
+    @Inject
+    SpringDataPetRepositoryImpl springDataPets;
+    @Inject
+    SpringDataPetTypeRepositoryImpl springDataPetTypes;
+    @Inject
+    SpringDataSpecialtyRepositoryImpl springDataSpecialties;
+    @Inject
+    SpringDataVisitRepositoryImpl springDataVisits;
 
     @Test
     @Transactional
@@ -119,5 +131,48 @@ class JpaRepositoriesIT {
         user.setEnabled(true);
         user.addRole("ROLE_USER");
         users.save(user);
+
+    }
+
+    @Test
+    @Transactional
+    void springDataOverrideDeletes() {
+        PetType dog = new PetType();
+        dog.setName("cat");
+        petTypes.save(dog);
+
+        Owner owner = new Owner();
+        owner.setFirstName("Alan");
+        owner.setLastName("Turing");
+        owner.setAddress("Bletchley");
+        owner.setCity("Milton Keynes");
+        owner.setTelephone("999");
+        owners.save(owner);
+
+        Pet pet = new Pet();
+        pet.setName("Socks");
+        pet.setBirthDate(LocalDate.of(2019, 5, 5));
+        pet.setType(dog);
+        pet.setOwner(owner);
+        pets.save(pet);
+
+        Visit visit = new Visit();
+        visit.setDate(LocalDate.of(2020, 5, 5));
+        visit.setDescription("nails");
+        visit.setPet(pet);
+        visits.save(visit);
+
+        springDataVisits.delete(visit);
+        springDataPets.delete(pets.findById(pet.getId()));
+
+        Specialty surgery = new Specialty();
+        surgery.setName("surgery");
+        specialties.save(surgery);
+        springDataSpecialties.delete(surgery);
+
+        PetType bird = new PetType();
+        bird.setName("bird");
+        petTypes.save(bird);
+        springDataPetTypes.delete(bird);
     }
 }
