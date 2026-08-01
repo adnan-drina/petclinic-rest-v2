@@ -24,8 +24,10 @@ package com.demo.util;
  */
 public class ObjectRetrievalFailureException extends RuntimeException {
 
-    private final Class<?> entityClass;
-    private final Object entityId;
+    private static final long serialVersionUID = 1L;
+
+    private final transient Class<?> entityClass;
+    private final transient Object entityId;
 
     /**
      * Creates a new instance.

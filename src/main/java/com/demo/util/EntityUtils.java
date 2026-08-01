@@ -50,4 +50,12 @@ public abstract class EntityUtils {
         throw new ObjectRetrievalFailureException(entityClass, entityId);
     }
 
+
+    /**
+     * Utility classes should not have a public or default constructor.
+     */
+    private EntityUtils() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
 }
