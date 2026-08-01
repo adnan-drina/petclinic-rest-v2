@@ -4,8 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.demo</groupId>
-  <artifactId>quarkus-migration-app</artifactId>
+  <artifactId>petclinic-rest</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+
+  <description>Quarkus migration of the Spring PetClinic REST sample application</description>
 
   <properties>
     <compiler-plugin.version>3.14.0</compiler-plugin.version>
