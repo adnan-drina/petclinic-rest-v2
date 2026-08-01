@@ -140,6 +140,8 @@ Acceptance HTTP path is deferred to the deploy story per O-M3ACCEPT / S-AC1 / G-
 
 ---
 
+---
+
 ## T-006: Finding-scope boundaries (prior + later)
 **Shape**: structure
 **Class**: infer
@@ -150,27 +152,26 @@ No new S05 SUTs. Claim residual DI finding incidents already delivered by S04
 for later stories (REST/security/OpenAPI) so plan-lint K1 stays green.
 
 **Target design**:
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetTypeRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcSpecialtyRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcUserRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVetRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVisitRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaOwnerRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaPetRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaPetTypeRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaSpecialtyRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaUserRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVetRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVisitRepositoryImpl.java`
-- → `src/main/java/org/springframework/samples/petclinic/rest/RootRestController.java`
-- → `src/main/java/org/springframework/samples/petclinic/security/BasicAuthenticationConfig.java`
-- → `src/main/java/org/springframework/samples/petclinic/security/DisableSecurityConfig.java`
-- → `src/main/java/org/springframework/samples/petclinic/security/Roles.java`
-- → `src/main/java/org/springframework/samples/petclinic/util/ApplicationSwaggerConfig.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcOwnerRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcPetRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcPetTypeRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcPetTypeRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcSpecialtyRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcSpecialtyRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcUserRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcUserRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVetRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcVetRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jdbc/JdbcVisitRepositoryImpl.java` → `src/main/java/com/demo/repository/jdbc/JdbcVisitRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaOwnerRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaOwnerRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaPetRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaPetRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaPetTypeRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaPetTypeRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaSpecialtyRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaSpecialtyRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaUserRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaUserRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVetRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaVetRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/repository/jpa/JpaVisitRepositoryImpl.java` → `src/main/java/com/demo/repository/jpa/JpaVisitRepositoryImpl.java`
+- `src/main/java/org/springframework/samples/petclinic/rest/RootRestController.java` → `src/main/java/com/demo/rest/RootRestController.java`
+- `src/main/java/org/springframework/samples/petclinic/security/BasicAuthenticationConfig.java` → `src/main/java/com/demo/security/BasicAuthenticationConfig.java`
+- `src/main/java/org/springframework/samples/petclinic/security/DisableSecurityConfig.java` → `src/main/java/com/demo/security/DisableSecurityConfig.java`
+- `src/main/java/org/springframework/samples/petclinic/security/Roles.java` → `src/main/java/com/demo/security/Roles.java`
+- `src/main/java/org/springframework/samples/petclinic/util/ApplicationSwaggerConfig.java` → `src/main/java/com/demo/util/ApplicationSwaggerConfig.java`
 
-**Absorbs**: prior-S04 and later-story DI incidents listed in Target design above
-(JpaUserRepositoryImpl refresh already satisfied by S04).
+**Absorbs**: `src/main/java/com/demo/repository/jdbc/JdbcOwnerRepositoryImpl.java` `src/main/java/com/demo/repository/jdbc/JdbcPetRepositoryImpl.java` `src/main/java/com/demo/repository/jdbc/JdbcPetTypeRepositoryImpl.java` `src/main/java/com/demo/repository/jdbc/JdbcSpecialtyRepositoryImpl.java` `src/main/java/com/demo/repository/jdbc/JdbcUserRepositoryImpl.java` `src/main/java/com/demo/repository/jdbc/JdbcVetRepositoryImpl.java` `src/main/java/com/demo/repository/jdbc/JdbcVisitRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaOwnerRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaPetRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaPetTypeRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaSpecialtyRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaUserRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaVetRepositoryImpl.java` `src/main/java/com/demo/repository/jpa/JpaVisitRepositoryImpl.java` `src/main/java/com/demo/rest/RootRestController.java` `src/main/java/com/demo/security/BasicAuthenticationConfig.java` `src/main/java/com/demo/security/DisableSecurityConfig.java` `src/main/java/com/demo/security/Roles.java` `src/main/java/com/demo/util/ApplicationSwaggerConfig.java`
 
 **Acceptance**: plan-lint green for S05 findings-scope; no new repository/rest/security/util src/main from this task
