@@ -13,3 +13,7 @@ skill, better sensor) — never by weakening the sensors.
 - head: 09fa7ca
 - reason: O-SFIXNOSPRING: sfix reintroduced Spring (commit reset)
 - resolved: c53b545 fidelity tip + O-SFIXNOSPRINGSDATA allow springframework.data with quarkus-spring-data-jpa
+
+## T-003 — milestone RED
+- head: a8466e1
+- reason: sensor-fix committed but milestone still RED (commit reset)
