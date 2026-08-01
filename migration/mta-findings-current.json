@@ -582,8 +582,8 @@
 					{
 						"uri": "file:///tmp/kantra-findings-src/src/main/resources/application.properties",
 						"message": "This configuration key follows the environment-variable convention (ALL_CAPS key or ${ALL_CAPS} placeholder) — an operational contract: deployments inject it to point the app at external services. Record it under `preserve:` in migration.yaml and keep it env-driven in the migrated configuration (e.g. `quarkus.rest-client.\u003ckey\u003e.url=${VAR:default}`). Erasing or hardcoding it is a functional regression no unit test catches.\n",
-						"codeSnip": "  1  quarkus.http.port=8080\n  2  quarkus.log.level=INFO\n  3  quarkus.log.category.\"org.springframework\".level=INFO\n  4  %dev.quarkus.http.root-path=/petclinic\n  5  %prod.quarkus.http.root-path=/petclinic\n  6  quarkus.analytics.disabled=true\n  7  petclinic.security.enable=false\n  8  \n  9  # Local development datasource (H2)\n 10  %dev.quarkus.datasource.db-kind=h2\n 11  %dev.quarkus.datasource.username=sa\n 12  %dev.quarkus.datasource.password=\n 13  %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 14  \n 15  # LLM access is only through the MaaS gateway (see .opencode/skills/llm-integration.md).\n 16  # Uncomment when implementing an LLM-powered feature; the workspace injects\n 17  # the MAAS_* environment variables.\n 18  # quarkus.langchain4j.openai.base-url=${MAAS_API_BASE_URL}\n 19  # quarkus.langchain4j.openai.api-key=${MAAS_API_KEY}\n 20  # quarkus.langchain4j.openai.chat-model.model-name=${MAAS_MODEL_NAME}\n 21  # quarkus.langchain4j.openai.chat-model.temperature=0.1\n 22  # quarkus.langchain4j.openai.timeout=60s\n 23  \n 24  # O-HEALTHROOT: keep /q/* outside servlet root-path\n 25  quarkus.http.non-application-root-path=/q\n",
-						"lineNumber": 18,
+						"codeSnip": "  1  # preserve: server.servlet.context-path → quarkus.http.root-path\n  2  quarkus.http.port=8080\n  3  quarkus.log.level=INFO\n  4  quarkus.log.category.\"org.springframework\".level=INFO\n  5  quarkus.http.root-path=/petclinic\n  6  %dev.quarkus.http.root-path=/petclinic\n  7  %prod.quarkus.http.root-path=/petclinic\n  8  quarkus.analytics.disabled=true\n  9  petclinic.security.enable=false\n 10  \n 11  # Default-profile datasource for package/verify (O-ENTITYDS).\n 12  # %dev-only JDBC is invisible to quarkus:build on the default profile once @Entity\n 13  # classes exist — milestone verify then fails with missing \u003cdefault\u003e datasource.\n 14  quarkus.datasource.db-kind=h2\n 15  quarkus.datasource.username=sa\n 16  quarkus.datasource.password=\n 17  quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 18  \n 19  # Local development datasource (H2) — same as default for now\n 20  %dev.quarkus.datasource.db-kind=h2\n 21  %dev.quarkus.datasource.username=sa\n 22  %dev.quarkus.datasource.password=\n 23  %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 24  \n 25  # LLM access is only through the MaaS gateway (see .opencode/skills/llm-integration.md).\n 26  # Uncomment when implementing an LLM-powered feature; the workspace injects\n 27  # the MAAS_* environment variables.\n 28  # quarkus.langchain4j.openai.base-url=${MAAS_API_BASE_URL}\n 29  # quarkus.langchain4j.openai.api-key=${MAAS_API_KEY}\n 30  # quarkus.langchain4j.openai.chat-model.model-name=${MAAS_MODEL_NAME}\n 31  # quarkus.langchain4j.openai.chat-model.temperature=0.1\n 32  # quarkus.langchain4j.openai.timeout=60s\n 33  \n 34  # O-HEALTHROOT: keep /q/* outside servlet root-path\n 35  quarkus.http.non-application-root-path=/q\n",
+						"lineNumber": 28,
 						"variables": {
 							"matchingText": "${MAAS_API_BASE_URL}"
 						}
@@ -591,8 +591,8 @@
 					{
 						"uri": "file:///tmp/kantra-findings-src/src/main/resources/application.properties",
 						"message": "This configuration key follows the environment-variable convention (ALL_CAPS key or ${ALL_CAPS} placeholder) — an operational contract: deployments inject it to point the app at external services. Record it under `preserve:` in migration.yaml and keep it env-driven in the migrated configuration (e.g. `quarkus.rest-client.\u003ckey\u003e.url=${VAR:default}`). Erasing or hardcoding it is a functional regression no unit test catches.\n",
-						"codeSnip": "  1  quarkus.http.port=8080\n  2  quarkus.log.level=INFO\n  3  quarkus.log.category.\"org.springframework\".level=INFO\n  4  %dev.quarkus.http.root-path=/petclinic\n  5  %prod.quarkus.http.root-path=/petclinic\n  6  quarkus.analytics.disabled=true\n  7  petclinic.security.enable=false\n  8  \n  9  # Local development datasource (H2)\n 10  %dev.quarkus.datasource.db-kind=h2\n 11  %dev.quarkus.datasource.username=sa\n 12  %dev.quarkus.datasource.password=\n 13  %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 14  \n 15  # LLM access is only through the MaaS gateway (see .opencode/skills/llm-integration.md).\n 16  # Uncomment when implementing an LLM-powered feature; the workspace injects\n 17  # the MAAS_* environment variables.\n 18  # quarkus.langchain4j.openai.base-url=${MAAS_API_BASE_URL}\n 19  # quarkus.langchain4j.openai.api-key=${MAAS_API_KEY}\n 20  # quarkus.langchain4j.openai.chat-model.model-name=${MAAS_MODEL_NAME}\n 21  # quarkus.langchain4j.openai.chat-model.temperature=0.1\n 22  # quarkus.langchain4j.openai.timeout=60s\n 23  \n 24  # O-HEALTHROOT: keep /q/* outside servlet root-path\n 25  quarkus.http.non-application-root-path=/q\n",
-						"lineNumber": 19,
+						"codeSnip": "  1  # preserve: server.servlet.context-path → quarkus.http.root-path\n  2  quarkus.http.port=8080\n  3  quarkus.log.level=INFO\n  4  quarkus.log.category.\"org.springframework\".level=INFO\n  5  quarkus.http.root-path=/petclinic\n  6  %dev.quarkus.http.root-path=/petclinic\n  7  %prod.quarkus.http.root-path=/petclinic\n  8  quarkus.analytics.disabled=true\n  9  petclinic.security.enable=false\n 10  \n 11  # Default-profile datasource for package/verify (O-ENTITYDS).\n 12  # %dev-only JDBC is invisible to quarkus:build on the default profile once @Entity\n 13  # classes exist — milestone verify then fails with missing \u003cdefault\u003e datasource.\n 14  quarkus.datasource.db-kind=h2\n 15  quarkus.datasource.username=sa\n 16  quarkus.datasource.password=\n 17  quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 18  \n 19  # Local development datasource (H2) — same as default for now\n 20  %dev.quarkus.datasource.db-kind=h2\n 21  %dev.quarkus.datasource.username=sa\n 22  %dev.quarkus.datasource.password=\n 23  %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 24  \n 25  # LLM access is only through the MaaS gateway (see .opencode/skills/llm-integration.md).\n 26  # Uncomment when implementing an LLM-powered feature; the workspace injects\n 27  # the MAAS_* environment variables.\n 28  # quarkus.langchain4j.openai.base-url=${MAAS_API_BASE_URL}\n 29  # quarkus.langchain4j.openai.api-key=${MAAS_API_KEY}\n 30  # quarkus.langchain4j.openai.chat-model.model-name=${MAAS_MODEL_NAME}\n 31  # quarkus.langchain4j.openai.chat-model.temperature=0.1\n 32  # quarkus.langchain4j.openai.timeout=60s\n 33  \n 34  # O-HEALTHROOT: keep /q/* outside servlet root-path\n 35  quarkus.http.non-application-root-path=/q\n",
+						"lineNumber": 29,
 						"variables": {
 							"matchingText": "${MAAS_API_KEY}"
 						}
@@ -600,8 +600,8 @@
 					{
 						"uri": "file:///tmp/kantra-findings-src/src/main/resources/application.properties",
 						"message": "This configuration key follows the environment-variable convention (ALL_CAPS key or ${ALL_CAPS} placeholder) — an operational contract: deployments inject it to point the app at external services. Record it under `preserve:` in migration.yaml and keep it env-driven in the migrated configuration (e.g. `quarkus.rest-client.\u003ckey\u003e.url=${VAR:default}`). Erasing or hardcoding it is a functional regression no unit test catches.\n",
-						"codeSnip": "  1  quarkus.http.port=8080\n  2  quarkus.log.level=INFO\n  3  quarkus.log.category.\"org.springframework\".level=INFO\n  4  %dev.quarkus.http.root-path=/petclinic\n  5  %prod.quarkus.http.root-path=/petclinic\n  6  quarkus.analytics.disabled=true\n  7  petclinic.security.enable=false\n  8  \n  9  # Local development datasource (H2)\n 10  %dev.quarkus.datasource.db-kind=h2\n 11  %dev.quarkus.datasource.username=sa\n 12  %dev.quarkus.datasource.password=\n 13  %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 14  \n 15  # LLM access is only through the MaaS gateway (see .opencode/skills/llm-integration.md).\n 16  # Uncomment when implementing an LLM-powered feature; the workspace injects\n 17  # the MAAS_* environment variables.\n 18  # quarkus.langchain4j.openai.base-url=${MAAS_API_BASE_URL}\n 19  # quarkus.langchain4j.openai.api-key=${MAAS_API_KEY}\n 20  # quarkus.langchain4j.openai.chat-model.model-name=${MAAS_MODEL_NAME}\n 21  # quarkus.langchain4j.openai.chat-model.temperature=0.1\n 22  # quarkus.langchain4j.openai.timeout=60s\n 23  \n 24  # O-HEALTHROOT: keep /q/* outside servlet root-path\n 25  quarkus.http.non-application-root-path=/q\n",
-						"lineNumber": 20,
+						"codeSnip": "  1  # preserve: server.servlet.context-path → quarkus.http.root-path\n  2  quarkus.http.port=8080\n  3  quarkus.log.level=INFO\n  4  quarkus.log.category.\"org.springframework\".level=INFO\n  5  quarkus.http.root-path=/petclinic\n  6  %dev.quarkus.http.root-path=/petclinic\n  7  %prod.quarkus.http.root-path=/petclinic\n  8  quarkus.analytics.disabled=true\n  9  petclinic.security.enable=false\n 10  \n 11  # Default-profile datasource for package/verify (O-ENTITYDS).\n 12  # %dev-only JDBC is invisible to quarkus:build on the default profile once @Entity\n 13  # classes exist — milestone verify then fails with missing \u003cdefault\u003e datasource.\n 14  quarkus.datasource.db-kind=h2\n 15  quarkus.datasource.username=sa\n 16  quarkus.datasource.password=\n 17  quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 18  \n 19  # Local development datasource (H2) — same as default for now\n 20  %dev.quarkus.datasource.db-kind=h2\n 21  %dev.quarkus.datasource.username=sa\n 22  %dev.quarkus.datasource.password=\n 23  %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:testdb\n 24  \n 25  # LLM access is only through the MaaS gateway (see .opencode/skills/llm-integration.md).\n 26  # Uncomment when implementing an LLM-powered feature; the workspace injects\n 27  # the MAAS_* environment variables.\n 28  # quarkus.langchain4j.openai.base-url=${MAAS_API_BASE_URL}\n 29  # quarkus.langchain4j.openai.api-key=${MAAS_API_KEY}\n 30  # quarkus.langchain4j.openai.chat-model.model-name=${MAAS_MODEL_NAME}\n 31  # quarkus.langchain4j.openai.chat-model.temperature=0.1\n 32  # quarkus.langchain4j.openai.timeout=60s\n 33  \n 34  # O-HEALTHROOT: keep /q/* outside servlet root-path\n 35  quarkus.http.non-application-root-path=/q\n",
+						"lineNumber": 30,
 						"variables": {
 							"matchingText": "${MAAS_MODEL_NAME}"
 						}
@@ -633,11 +633,211 @@
 				],
 				"incidents": [
 					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/OwnerAllOfDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/OwnerDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/OwnerFieldsDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/PetAllOfDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/PetDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/PetFieldsDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/PetTypeDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/RestErrorDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/RoleDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/SpecialtyDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/UserDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/ValidationMessageDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/VetDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/VisitAllOfDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/VisitDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/dto/VisitFieldsDto.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/OwnerMapper.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/PetMapper.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/PetTypeMapper.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/SpecialtyMapper.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/UserMapper.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/VetMapper.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/mapper/VisitMapper.java",
+						"message": ""
+					},
+					{
 						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/BaseEntity.java",
 						"message": ""
 					},
 					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/NamedEntity.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Owner.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Person.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Pet.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/PetType.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Role.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Specialty.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/User.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Vet.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Visit.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/package-info.java",
+						"message": ""
+					},
+					{
 						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/rest/BindingErrorsResponse.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/util/EntityUtils.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/util/ObjectRetrievalFailureException.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/BaseEntityTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/NamedEntityTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/OwnerTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/PersonTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/PetTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/PetTypeTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/RoleTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/SpecialtyTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/UserTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/VetTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/model/VisitTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/rest/BindingErrorsResponseTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/util/EntityUtilsTest.java",
+						"message": ""
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/test/java/com/demo/util/ObjectRetrievalFailureExceptionTest.java",
 						"message": ""
 					}
 				]
@@ -2252,8 +2452,8 @@
 					{
 						"uri": "file:///tmp/kantra-findings-src/pom.xml",
 						"message": "Dependency `jakarta.ws.rs:jakarta.ws.rs-api` has to be replaced with `io.quarkus:quarkus-resteasy-reactive` artifact.",
-						"codeSnip": "\n72  \u003cdependency\u003e\n73  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n74  \u003cartifactId\u003equarkus-hibernate-orm\u003c/artifactId\u003e\n75  \u003c/dependency\u003e\n76  \u003cdependency\u003e\n77  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n78  \u003cartifactId\u003equarkus-hibernate-orm-rest-data-panache\u003c/artifactId\u003e\n79  \u003c/dependency\u003e\n80  \u003cdependency\u003e\n81  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n82  \u003cartifactId\u003equarkus-hibernate-validator\u003c/artifactId\u003e\n83  \u003c/dependency\u003e\n84  \u003c!-- H2 for local testing --\u003e\n85  \u003cdependency\u003e\n86  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n87  \u003cartifactId\u003equarkus-jdbc-h2\u003c/artifactId\u003e\n88  \u003c/dependency\u003e\n89  \u003c!-- PostgreSQL for production --\u003e\n90  \u003cdependency\u003e\n91  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n92  \u003cartifactId\u003equarkus-jdbc-postgresql\u003c/artifactId\u003e",
-						"lineNumber": 81,
+						"codeSnip": "\n77  \u003cdependency\u003e\n78  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n79  \u003cartifactId\u003equarkus-hibernate-orm\u003c/artifactId\u003e\n80  \u003c/dependency\u003e\n81  \u003cdependency\u003e\n82  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n83  \u003cartifactId\u003equarkus-hibernate-orm-rest-data-panache\u003c/artifactId\u003e\n84  \u003c/dependency\u003e\n85  \u003cdependency\u003e\n86  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n87  \u003cartifactId\u003equarkus-hibernate-validator\u003c/artifactId\u003e\n88  \u003c/dependency\u003e\n89  \u003c!-- H2 for local testing --\u003e\n90  \u003cdependency\u003e\n91  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n92  \u003cartifactId\u003equarkus-jdbc-h2\u003c/artifactId\u003e\n93  \u003c/dependency\u003e\n94  \u003c!-- PostgreSQL for production --\u003e\n95  \u003cdependency\u003e\n96  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e\n97  \u003cartifactId\u003equarkus-jdbc-postgresql\u003c/artifactId\u003e",
+						"lineNumber": 86,
 						"variables": {
 							"name": "jakarta.ws.rs.jakarta.ws.rs-api",
 							"version": "3.1.0.redhat-00003"
@@ -2630,7 +2830,10 @@
 			"Configuration Management=Application Properties File",
 			"Embedded=Application Properties File",
 			"Embedded=Properties",
+			"Java EE=JPA named queries",
 			"Other=Properties",
+			"Persistence=JPA named queries",
+			"Store=JPA named queries",
 			"Sustain=Application Properties File",
 			"Sustain=Properties"
 		],
@@ -2688,6 +2891,210 @@
 							"tags": [
 								"Properties"
 							]
+						}
+					}
+				]
+			},
+			"technology-usage-database-01200": {
+				"description": "JPA Queries",
+				"labels": [
+					"discovery",
+					"konveyor.io/include=always",
+					"tag=Java EE=JPA named queries",
+					"tag=Persistence=JPA named queries",
+					"tag=Store=JPA named queries"
+				],
+				"incidents": [
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Owner.java",
+						"message": "",
+						"codeSnip": "\n22  \n23  \n24  /**\n25  * Simple JavaBean domain object representing an owner.\n26  *\n27  * @author Ken Krebs\n28  * @author Juergen Hoeller\n29  * @author Sam Brannen\n30  * @author Michael Isvy\n31  */\n32  @Entity\n33  @Table(name = \"owners\")\n34  public class Owner extends Person {\n35  @Column(name = \"address\")\n36  @NotEmpty\n37  private String address;\n38  \n39  @Column(name = \"city\")\n40  @NotEmpty\n41  private String city;\n42  ",
+						"lineNumber": 32,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Owner.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Owner.java",
+						"message": "",
+						"codeSnip": "\n23  \n24  /**\n25  * Simple JavaBean domain object representing an owner.\n26  *\n27  * @author Ken Krebs\n28  * @author Juergen Hoeller\n29  * @author Sam Brannen\n30  * @author Michael Isvy\n31  */\n32  @Entity\n33  @Table(name = \"owners\")\n34  public class Owner extends Person {\n35  @Column(name = \"address\")\n36  @NotEmpty\n37  private String address;\n38  \n39  @Column(name = \"city\")\n40  @NotEmpty\n41  private String city;\n42  \n43  @Column(name = \"telephone\")",
+						"lineNumber": 33,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Owner.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Pet.java",
+						"message": "",
+						"codeSnip": "\n20  import java.util.*;\n21  \n22  \n23  /**\n24  * Simple business object representing a pet.\n25  *\n26  * @author Ken Krebs\n27  * @author Juergen Hoeller\n28  * @author Sam Brannen\n29  */\n30  @Entity\n31  @Table(name = \"pets\")\n32  public class Pet extends NamedEntity {\n33  \n34  @Column(name = \"birth_date\", columnDefinition = \"DATE\")\n35  private LocalDate birthDate;\n36  \n37  @ManyToOne\n38  @JoinColumn(name = \"type_id\")\n39  private PetType type;\n40  ",
+						"lineNumber": 30,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Pet.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Pet.java",
+						"message": "",
+						"codeSnip": "\n21  \n22  \n23  /**\n24  * Simple business object representing a pet.\n25  *\n26  * @author Ken Krebs\n27  * @author Juergen Hoeller\n28  * @author Sam Brannen\n29  */\n30  @Entity\n31  @Table(name = \"pets\")\n32  public class Pet extends NamedEntity {\n33  \n34  @Column(name = \"birth_date\", columnDefinition = \"DATE\")\n35  private LocalDate birthDate;\n36  \n37  @ManyToOne\n38  @JoinColumn(name = \"type_id\")\n39  private PetType type;\n40  \n41  @ManyToOne",
+						"lineNumber": 31,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Pet.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/PetType.java",
+						"message": "",
+						"codeSnip": "\n15  */\n16  package com.demo.model;\n17  \n18  import jakarta.persistence.Entity;\n19  import jakarta.persistence.Table;\n20  \n21  /**\n22  * @author Juergen Hoeller\n23  *         Can be Cat, Dog, Hamster...\n24  */\n25  @Entity\n26  @Table(name = \"types\")\n27  public class PetType extends NamedEntity {\n28  \n29  }",
+						"lineNumber": 25,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/PetType.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/PetType.java",
+						"message": "",
+						"codeSnip": "\n16  package com.demo.model;\n17  \n18  import jakarta.persistence.Entity;\n19  import jakarta.persistence.Table;\n20  \n21  /**\n22  * @author Juergen Hoeller\n23  *         Can be Cat, Dog, Hamster...\n24  */\n25  @Entity\n26  @Table(name = \"types\")\n27  public class PetType extends NamedEntity {\n28  \n29  }",
+						"lineNumber": 26,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/PetType.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Role.java",
+						"message": "",
+						"codeSnip": "\n 2  \n 3  import jakarta.persistence.Column;\n 4  import jakarta.persistence.Entity;\n 5  import jakarta.persistence.JoinColumn;\n 6  import jakarta.persistence.ManyToOne;\n 7  import jakarta.persistence.Table;\n 8  import jakarta.persistence.UniqueConstraint;\n 9  \n10  import com.fasterxml.jackson.annotation.JsonIgnore;\n11  \n12  @Entity\n13  @Table(name = \"roles\" ,uniqueConstraints = @UniqueConstraint(columnNames = {\"username\", \"role\"}))\n14  public class Role extends BaseEntity {\n15  \n16  @ManyToOne\n17  @JoinColumn(name = \"username\")\n18  @JsonIgnore\n19  private User user;\n20  \n21  @Column( name = \"role\")\n22  private String name;",
+						"lineNumber": 12,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Role.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Role.java",
+						"message": "",
+						"codeSnip": "\n 3  import jakarta.persistence.Column;\n 4  import jakarta.persistence.Entity;\n 5  import jakarta.persistence.JoinColumn;\n 6  import jakarta.persistence.ManyToOne;\n 7  import jakarta.persistence.Table;\n 8  import jakarta.persistence.UniqueConstraint;\n 9  \n10  import com.fasterxml.jackson.annotation.JsonIgnore;\n11  \n12  @Entity\n13  @Table(name = \"roles\" ,uniqueConstraints = @UniqueConstraint(columnNames = {\"username\", \"role\"}))\n14  public class Role extends BaseEntity {\n15  \n16  @ManyToOne\n17  @JoinColumn(name = \"username\")\n18  @JsonIgnore\n19  private User user;\n20  \n21  @Column( name = \"role\")\n22  private String name;\n23  ",
+						"lineNumber": 13,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Role.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Specialty.java",
+						"message": "",
+						"codeSnip": "\n16  package com.demo.model;\n17  \n18  import jakarta.persistence.Entity;\n19  import jakarta.persistence.Table;\n20  \n21  /**\n22  * Models a {@link Vet Vet's} specialty (for example, dentistry).\n23  *\n24  * @author Juergen Hoeller\n25  */\n26  @Entity\n27  @Table(name = \"specialties\")\n28  public class Specialty extends NamedEntity {\n29  \n30  }",
+						"lineNumber": 26,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Specialty.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Specialty.java",
+						"message": "",
+						"codeSnip": "\n17  \n18  import jakarta.persistence.Entity;\n19  import jakarta.persistence.Table;\n20  \n21  /**\n22  * Models a {@link Vet Vet's} specialty (for example, dentistry).\n23  *\n24  * @author Juergen Hoeller\n25  */\n26  @Entity\n27  @Table(name = \"specialties\")\n28  public class Specialty extends NamedEntity {\n29  \n30  }",
+						"lineNumber": 27,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Specialty.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/User.java",
+						"message": "",
+						"codeSnip": "\n 6  import jakarta.persistence.CascadeType;\n 7  import jakarta.persistence.Column;\n 8  import jakarta.persistence.Entity;\n 9  import jakarta.persistence.FetchType;\n10  import jakarta.persistence.Id;\n11  import jakarta.persistence.OneToMany;\n12  import jakarta.persistence.Table;\n13  \n14  import com.fasterxml.jackson.annotation.JsonIgnore;\n15  \n16  @Entity\n17  @Table(name = \"users\")\n18  public class User {\n19  \n20  @Id\n21  @Column(name = \"username\")\n22  private String username;\n23  \n24  @Column(name = \"password\")\n25  private String password;\n26  ",
+						"lineNumber": 16,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/User.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/User.java",
+						"message": "",
+						"codeSnip": "\n 7  import jakarta.persistence.Column;\n 8  import jakarta.persistence.Entity;\n 9  import jakarta.persistence.FetchType;\n10  import jakarta.persistence.Id;\n11  import jakarta.persistence.OneToMany;\n12  import jakarta.persistence.Table;\n13  \n14  import com.fasterxml.jackson.annotation.JsonIgnore;\n15  \n16  @Entity\n17  @Table(name = \"users\")\n18  public class User {\n19  \n20  @Id\n21  @Column(name = \"username\")\n22  private String username;\n23  \n24  @Column(name = \"password\")\n25  private String password;\n26  \n27  @Column(name = \"enabled\")",
+						"lineNumber": 17,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/User.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Vet.java",
+						"message": "",
+						"codeSnip": "\n22  import java.util.*;\n23  \n24  /**\n25  * Simple JavaBean domain object representing a veterinarian.\n26  *\n27  * @author Ken Krebs\n28  * @author Juergen Hoeller\n29  * @author Sam Brannen\n30  * @author Arjen Poutsma\n31  */\n32  @Entity\n33  @Table(name = \"vets\")\n34  public class Vet extends Person {\n35  \n36  @ManyToMany(fetch = FetchType.EAGER)\n37  @JoinTable(name = \"vet_specialties\", joinColumns = @JoinColumn(name = \"vet_id\"),\n38  inverseJoinColumns = @JoinColumn(name = \"specialty_id\"))\n39  private Set\u003cSpecialty\u003e specialties;\n40  \n41  @JsonIgnore\n42  protected Set\u003cSpecialty\u003e getSpecialtiesInternal() {",
+						"lineNumber": 32,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Vet.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Vet.java",
+						"message": "",
+						"codeSnip": "\n23  \n24  /**\n25  * Simple JavaBean domain object representing a veterinarian.\n26  *\n27  * @author Ken Krebs\n28  * @author Juergen Hoeller\n29  * @author Sam Brannen\n30  * @author Arjen Poutsma\n31  */\n32  @Entity\n33  @Table(name = \"vets\")\n34  public class Vet extends Person {\n35  \n36  @ManyToMany(fetch = FetchType.EAGER)\n37  @JoinTable(name = \"vet_specialties\", joinColumns = @JoinColumn(name = \"vet_id\"),\n38  inverseJoinColumns = @JoinColumn(name = \"specialty_id\"))\n39  private Set\u003cSpecialty\u003e specialties;\n40  \n41  @JsonIgnore\n42  protected Set\u003cSpecialty\u003e getSpecialtiesInternal() {\n43  if (this.specialties == null) {",
+						"lineNumber": 33,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Vet.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Visit.java",
+						"message": "",
+						"codeSnip": "\n17  \n18  import jakarta.persistence.*;\n19  import jakarta.validation.constraints.NotEmpty;\n20  import java.time.LocalDate;\n21  \n22  /**\n23  * Simple JavaBean domain object representing a visit.\n24  *\n25  * @author Ken Krebs\n26  */\n27  @Entity\n28  @Table(name = \"visits\")\n29  public class Visit extends BaseEntity {\n30  \n31  /**\n32  * Holds value of property date.\n33  */\n34  @Column(name = \"visit_date\", columnDefinition = \"DATE\")\n35  private LocalDate date;\n36  \n37  /**",
+						"lineNumber": 27,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Visit.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
+						}
+					},
+					{
+						"uri": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Visit.java",
+						"message": "",
+						"codeSnip": "\n18  import jakarta.persistence.*;\n19  import jakarta.validation.constraints.NotEmpty;\n20  import java.time.LocalDate;\n21  \n22  /**\n23  * Simple JavaBean domain object representing a visit.\n24  *\n25  * @author Ken Krebs\n26  */\n27  @Entity\n28  @Table(name = \"visits\")\n29  public class Visit extends BaseEntity {\n30  \n31  /**\n32  * Holds value of property date.\n33  */\n34  @Column(name = \"visit_date\", columnDefinition = \"DATE\")\n35  private LocalDate date;\n36  \n37  /**\n38  * Holds value of property description.",
+						"lineNumber": 28,
+						"variables": {
+							"file": "file:///tmp/kantra-findings-src/src/main/java/com/demo/model/Visit.java",
+							"kind": "Property",
+							"name": "Entity",
+							"package": "com.demo.model"
 						}
 					}
 				]
@@ -3140,7 +3547,6 @@
 			"technology-usage-database-01000",
 			"technology-usage-database-01001",
 			"technology-usage-database-01100",
-			"technology-usage-database-01200",
 			"technology-usage-database-01300",
 			"technology-usage-database-01400",
 			"technology-usage-database-01500",
