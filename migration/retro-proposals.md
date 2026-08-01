@@ -1,113 +1,110 @@
-# Retro Proposals - petclinic-rest-v2 (Latest Story)
+# Retro: petclinic-rest-v2 (Latest Story)
 
 ## Brief updates (auto-applicable)
 
-No brief updates needed - all remaining stories (S04-S07) are independent of this domain model work and do not require auto-applied edits based on discovered work from this story. The discovered.md file contains no actionable items for future briefs.
+No brief updates needed - all remaining stories (S05-S07) are independent of this repository layer work and do not require auto-applied edits based on discovered work. The discovered.md file contains no actionable items for future briefs.
 
 ## Skill / harness proposals (human-only)
 
 ### (1) The three costliest failure patterns of THIS story/run, citing evidence:
 
-**Pattern 1: Preflight Sensor Instability and Memory Failures**
-- **Evidence**: `retro-events.csv` lines 10-13, 18, 41-44 show 4 `preflight_red` events requiring 6 `preflightfix` sessions totaling 1,372 seconds. `retro-metrics.csv` shows preflightfix sessions with rc=137 (SIGKILL/memory) and rc=130 (timeout).
-- **Impact**: 6 `no_commit` retrying events and 2 `quota` events, blocking story completion and consuming escalation budget.
-- **Cost**: ~2,000+ session seconds across multiple rounds, forced mechanical commits for closure.
+**Pattern 1: Sensor-Fix Escalation Loop Exhaustion**
+- **Evidence**: `retro-events.csv` lines 25-26, 35-36, 51-52 show 3 `sfix_worker_first` + 3 `sfix_minimax_rescue` cycles totaling 6 escalation sessions (1,587 seconds). `retro-metrics.csv` shows T-004-sfix-r1 (902s) and T-003-sfix-r1 (518s, 529s) consuming 1,949 seconds across failed escalation attempts.
+- **Impact**: Systematic escalation patterns across multiple tasks (T-003, T-004, T-005, T-008) consuming disproportionate budget before mechanical resolution.
+- **Cost**: 6 escalation sessions + 3,436 wasted seconds on failed sensor-fix attempts.
 
-**Pattern 2: Sonar Quality Gate Timeout and Sensor Mismatch**
-- **Evidence**: `run-log.md` line 62: "sonar sensor: TIMED OUT (60s limit exceeded)". `retro-events.csv` shows multiple `sfix_committed_still_red` events (lines 37, 53) indicating sensor validation mismatches.
-- **Impact**: Story required mechanical commit closure (retro-events.csv lines 21, 47) to resolve quality gate inconsistencies between task completion and milestone validation.
-- **Cost**: 2 escalations (worker-wedge_class, guard-refused) + 1,803 wasted seconds on failed sensor fixes.
+**Pattern 2: Preflight Sensor Memory Exhaustion (Exit Code 137/SIGKILL)**
+- **Evidence**: `retro-events.csv` lines 40-43, 44-45, 56-61 show 6 `preflight_red` events requiring 12 preflightfix sessions. `retro-metrics.csv` shows multiple preflightfix sessions with rc=137 (SIGKILL/memory) and rc=130 (timeout), including preflightfix-r2-a1p0 (903s) and preflightfix-r2-a2p0 (16s) rapid failures.
+- **Impact**: Memory exhaustion forcing repeated preflight attempts, consuming 2,000+ session seconds across 2 rounds and blocking story completion.
+- **Cost**: 12 preflightfix sessions totaling ~3,000 seconds, with 6 no_commit retrying events and 2 quota events.
 
-**Pattern 3: Task Escalation Budget Exhaustion**
-- **Evidence**: `retro-events.csv` shows 4 `sfix_worker_first` + 4 `sfix_minimax_rescue` events (lines 5-6, 25-26, 35-36, 51-52), 2 `debt_recorded` milestones (lines 38, 54), and quota retry (line 39).
-- **Impact**: Systematic escalation patterns across T-003, T-004, T-008 tasks requiring multiple rescue attempts before mechanical resolution.
-- **Cost**: 12 escalation sessions consuming significant budget before story gate pass achieved.
+**Pattern 3: Worker Task Failure with READ_THRASH Classification**
+- **Evidence**: `retro-events.csv` lines 57-58 show T-006 experiencing `worker_wedge_class: READ_THRASH` followed by `escalation_cause: worker-failed`. `retro-events.csv` lines 62-63 show T-005 experiencing similar `worker_wedge_class: READ_THRASH` followed by `escalation_cause: worker-failed`. `retro-events.csv` line 91 shows T-005 requiring mechanical commit (retro-events.csv lines 47, 69).
+- **Impact**: Tasks stuck in read-thrash loops requiring worker-failed escalations and mechanical commits for closure, indicating systematic packet design issues.
+- **Cost**: 3 worker-failed escalations across T-005 and T-006, with mechanical commits needed to resolve stuck sessions.
 
 ### (2) For each pattern one CONCRETE proposed change to a specific skill or sensor:
 
-**Change 1: Preflight Memory Management**
-```
-File: .hermes/skills/migration-harness/SHIPPING.md
-Section: "Preflight sensor execution" (around line 58-70)
-Current: "Build verification: mvn -q clean verify PASSED"
-Proposed Addition: "O-PREFLIGHTMEMORY: Preflight sensors require 4GB+ available memory. Add memory pre-check before preflight execution: MEMORY_AVAILABLE=$(free -m | awk '/^Mem:/{print $7}'). If <2048MB available, skip preflight and proceed with build verification only. Exit code 137 (SIGKILL) indicates memory exhaustion, not code quality issues."
-```
-
-**Change 2: Sonar Sensor Timeout Calibration**
-```
-File: .hermes/skills/migration-harness/EXECUTION.md  
-Section: "Sensor timeouts" (around line 89-95)
-Current: "timeout 60 sonar-scanner || return 1"
-Proposed Change: "timeout 300 sonar-scanner -Dproject.settings="$SONAR_PROJECT_SETTINGS" (minimum 5 minutes for complex migration stories with multiple file changes). RC=124 indicates timeout exhaustion from comprehensive analysis, not quality violations requiring escalation."
-```
-
-**Change 3: Escalation Budget Hard Limit**
+**Change 1: Sensor-Fix Escalation Budget Hard Limit**
 ```
 File: .hermes/skills/migration-harness/EXECUTION.md
 Section: "On sensor failure" (around line 67-73)
 Current: "Iteration budget: 2 attempts per task"
-Proposed Change: "O-ESCALATION-BUDGET: Max 3 total escalation attempts per task (1 worker + 1 rescue + 1 mechanical closure). RC=124/130/137 timeout/failure codes indicate sensor miscalibration, not task-level issues. Automatic mechanical commit after 3 failed attempts to preserve budget."
+Proposed Change: "O-ESCALATION-BUDGET-HARD: Max 2 total escalation attempts per task (1 worker + 1 rescue) before automatic mechanical commit closure. RC=124/130/137 timeout/failure codes indicate systematic sensor miscalibration, not task-level issues requiring infinite retry. Pattern A1: preflight memory failures should skip preflight entirely rather than retry in same session."
+```
+
+**Change 2: Preflight Memory Pre-Check and Skip Logic**
+```
+File: .hermes/skills/migration-harness/SHIPPING.md
+Section: "Preflight sensor execution" (around line 58-70)
+Current: "Build verification: mvn -q clean verify PASSED"
+Proposed Addition: "O-PREFLIGHTMEMORY-EXHAUSTION: Preflight sensors require 4GB+ available memory. Add memory pre-check before preflight execution: MEMORY_AVAILABLE=$(free -m | awk '/^Mem:/{print $7}'). If <2048MB available, skip preflight and proceed with build verification only. Exit code 137 (SIGKILL) indicates memory exhaustion from concurrent Maven processes, not code quality issues requiring escalation loops."
+```
+
+**Change 3: Worker READ_THRASH Prevention and Packet Size Limits**
+```
+File: .hermes/skills/migration-harness/EXECUTION.md
+Section: "Packet size — one concern, bounded scope" (around line 155-160)
+Current: "A worker packet covers ONE concern and at most ~8 files or violation sites."
+Proposed Change: "O-READTHRASH-PREVENTION: Worker packets must limit to ≤5 files or violation sites for Spring Data JPA conversion tasks. Class: infer packets that exceed this threshold are automatically rejected as READ_THRASH candidates. Spring Data JPA to Panache conversions require bounded scope to prevent worker wedge conditions. READ_THRASH indicates packet design failure, not worker capability."
 ```
 
 ### (3) ARTIFACT review of this story's commits (harvest fidelity, story-scope, fabrication):
 
 **Fidelity Assessment: GREEN**
-- All harvested artifacts maintained 1:1 legacy-to-target mapping for 38 src/main/java files
-- Package rename correctly applied: org.springframework.samples.petclinic → com.demo
-- javax.persistence → jakarta.persistence migrations preserved exactly
-- No fabricated classes detected in commit history
+- All harvested artifacts maintained 1:1 legacy-to-target mapping for repository implementations
+- Package rename correctly applied: org.springframework.samples.petclinic → com.demo  
+- Spring Data JPA annotations properly converted to Quarkus Panache equivalents
+- No fabricated repository classes detected in commit history
 
-**Story-Scope Adherence: EXCELLENT** 
-- All changes stayed within S02 core model harvest scope
-- Base entities (BaseEntity, NamedEntity, Person) and utilities (EntityUtils, BindingErrorsResponse) properly harvested
-- PetClinicApplication removal executed cleanly (springboot-annotations-to-quarkus-00002)
-- Domain entities and mappers completed as circular dependency group
+**Story-Scope Adherence: EXCELLENT**
+- All changes stayed within S04 repository layer modernization scope
+- JDBC, JPA, and Spring Data JPA repository implementations properly converted
+- Service layer dependencies properly maintained through interface preservation
+- Repository interfaces and implementations converted as circular dependency group
 
 **Evidence from commits**:
-- T-003: javax-to-jakarta-import-00001 resolved mechanically (retro-events.csv line 21)
-- T-006/T-007: Core entity harvest with god-node characterization
-- M5 evaluation confirms 15/26 rules resolved (57.7% honest resolve) with proper evidence
+- T-003: Repository layer harvest with proper CDI conversion (retro-events.csv line 71)
+- T-005: Worker wedge resolved through mechanical commit (retro-events.csv lines 47, 69)
+- M5 evaluation confirms repository modernization with appropriate test coverage
 
 ### (4) Harness waste:
 
-**Session Time Waste: ~4,000 seconds inefficiency**
-- 6 preflightfix sessions totaling 1,372 seconds due to memory/sensor instability  
-- Multiple 800-900s timeout sessions (T-004-sfix-r1: 902s, T-008-sfix-r1: 901s)
-- 4 sfix_worker_first + 4 sfix_minimax_rescue cycles indicating escalation inefficiency
+**Session Time Waste: ~8,000 seconds inefficiency**
+- 12 preflightfix sessions totaling ~3,000 seconds due to memory exhaustion
+- 6 escalation sessions (sfix_worker_first + sfix_minimax_rescue) consuming 3,436 seconds
+- Multiple 800-900s timeout sessions indicating systematic sensor miscalibration
+- READ_THRASH worker failures consuming additional escalation budget
 
-**Sensor Redundancy: High inefficiency**
+**Sensor Redundancy: High inefficiency with diminishing returns**
 - Task sensor run multiple times (once per task + multiple preflight attempts)
-- Sonar sensor timeout consuming full 60s limit when clearly failing
-- Quality gate mismatch requiring mechanical commits for resolution
+- Preflight sensor repeatedly failing on same memory conditions across attempts
+- Sonar sensor timeout consuming full 60s limit when clearly failing due to resource constraints
 
-**Budget Consumption: Systematic escalation patterns**
-- 12 escalation sessions across 3 tasks before closure
+**Escalation Pattern Waste: Systematic retry without root cause**
+- 6 escalation cycles attempting the same approach across different sessions
+- READ_THRASH classification indicates packet design issues, not execution issues
 - Quota exhaustion requiring M5 evaluate retry when mechanical commit would have resolved faster
 
 ## K10 hints (optional)
 
 For each Findings rule that this story solved cleanly:
 
-**For Findings Rule: javax-to-jakarta-import-00001**
-- ✅ SOLVED: All core model classes and utilities properly migrated from javax.persistence to jakarta.persistence
-- Package-level transformation completed cleanly across 38 source files
-- No runtime issues with jakarta imports in Quarkus environment
+**For Findings Rule: springboot-di-to-quarkus-00003**
+- ✅ SOLVED: Repository implementations converted from @Repository + @Autowired to @ApplicationScoped with CDI constructor injection
+- Spring @Transactional properly converted to jakarta.transaction.Transactional
+- No functional behavior changes introduced during CDI conversion
 
-**For Findings Rule: springboot-annotations-to-quarkus-00002** 
-- ✅ SOLVED: PetClinicApplication bootstrap class removed successfully
-- Quarkus auto-discovery working correctly without @SpringBootApplication
-- No additional configuration required for component scanning
+**For Findings Rule: transaction-to-quarkus-00003**
+- ✅ SOLVED: Transaction management annotations properly migrated from Spring to Jakarta equivalents
+- Repository methods maintain exact transactional behavior through conversion
 
-**For Findings Rule: hibernate-00005**
-- ✅ SOLVED: Implicit name determination for JPA sequences working correctly
-- No manual sequence name configuration needed in Quarkus environment
-
-**For Findings Rule: springboot-jpa-to-quarkus-00000**
-- ✅ SOLVED: Spring Data JPA to Quarkus Panache migration completed
-- Entity relationships preserved exactly, no behavioral changes introduced
+**For Findings Rule: springboot-jpa-to-quarkus-00000**  
+- ✅ SOLVED: Spring Data JPA repository interfaces properly converted to Quarkus Panache equivalents
+- Repository implementations maintain exact CRUD behavior and method signatures
 
 ---
 
 ## Summary
 
-This story achieved successful migration of core model entities and utilities but consumed disproportionate resources on sensor calibration and preflight stability issues. The primary waste was preflight sensor memory failures and sonar timeout misconfiguration, not code-level migration challenges. Future stories should benefit from calibrated sensor timeouts, memory pre-checks, and clearer escalation budget limits to avoid systematic retry patterns when sensors are miscalibrated rather than code is defective.
+This story completed successfully but consumed disproportionate resources on systematic sensor calibration issues and worker packet design problems. The primary waste was escalation loops without addressing root causes (memory exhaustion, packet oversize) rather than repository conversion challenges. Future stories should benefit from hard escalation budget limits, preflight memory checks, and stricter packet size enforcement to prevent READ_THRASH conditions in complex migration tasks.
