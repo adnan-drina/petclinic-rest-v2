@@ -6,7 +6,7 @@
 
 ### T-001: Update Maven Coordinates and Package Prefix
 **Class:** rewrite  
-**Shape:** modify  
+**Shape**: modify
 **Target design:** → `pom.xml`
 
 **Legacy evidence:** `/projects/legacy/pom.xml:6-8` (groupId, artifactId)  
@@ -25,7 +25,7 @@ Update project coordinates and apply full package prefix replacement:
 
 ### T-002: Add Missing Quarkus Extensions for PetClinic
 **Class:** rewrite  
-**Shape:** modify  
+**Shape**: modify
 **Target design:** → `pom.xml`
 
 **Legacy evidence:** `/projects/legacy/pom.xml:40-70` (Spring Boot starters)  
@@ -47,7 +47,7 @@ Add required Quarkus extensions that are missing:
 
 ### T-003: Clean Up Spring Boot Dependencies and Plugins
 **Class:** rewrite  
-**Shape:** remove  
+**Shape**: remove
 **Target design:** → `pom.xml`
 
 **Legacy evidence:** `/projects/legacy/pom.xml:164-184` (spring-boot-maven-plugin), `/projects/legacy/pom.xml:186-236` (Jacoco), `/projects/legacy/pom.xml:238-251` (Jib)  
@@ -55,22 +55,20 @@ Add required Quarkus extensions that are missing:
 
 Remove any remaining Spring Boot specific configurations:
 
-**Changes:**
+|**Changes:**
 - Remove any lingering Spring Boot plugin configurations
 - Update Jacoco configuration to remove Spring-specific exclusions
 - Remove Jib Docker plugin (Quarkus handles containerization)
 - Clean up Spring Boot specific compiler arguments
 - Update OpenAPI generator configuration to use target package if present
 
-**Absorbs:** src/main/java/org/springframework/samples/petclinic/util/ApplicationSwaggerConfig.java (will be redesigned in future story)
-
-**Acceptance:** All Spring Boot specific configurations removed from pom.xml
+|**Acceptance:** All Spring Boot specific configurations removed from pom.xml
 
 ---
 
 ### T-004: Migrate Server Configuration Properties
 **Class:** rewrite  
-**Shape:** modify  
+**Shape**: modify
 **Target design:** → `src/main/resources/application.properties`
 
 **Legacy evidence:** `/projects/legacy/src/main/resources/application.properties:23-24` (server configuration)  
@@ -93,7 +91,7 @@ Migrate Spring Boot server properties to Quarkus equivalents:
 
 ### T-005: Migrate Logging Configuration Properties
 **Class:** rewrite  
-**Shape:** modify  
+**Shape**: modify
 **Target design:** → `src/main/resources/application.properties`
 
 **Legacy evidence:** `/projects/legacy/src/main/resources/application.properties:33` (logging level)  
@@ -112,7 +110,7 @@ Migrate Spring Boot logging properties to Quarkus logging configuration:
 
 ### T-006: Preserve Security Configuration
 **Class:** rewrite  
-**Shape:** modify  
+**Shape**: modify
 **Target design:** → `src/main/resources/application.properties`
 
 **Legacy evidence:** `/projects/legacy/src/main/resources/application.properties:41` (security enable)  
@@ -131,7 +129,7 @@ Maintain the security disablement configuration exactly:
 
 ### T-007: Clean Up Spring Profile Configuration
 **Class:** rewrite  
-**Shape:** remove  
+**Shape**: remove
 **Target design:** → `src/main/resources/application.properties`
 
 **Legacy evidence:** `/projects/legacy/src/main/resources/application.properties:19,28,30-31` (Spring profiles)  
@@ -151,7 +149,7 @@ Remove Spring-specific profile configuration no longer needed in Quarkus:
 
 ### T-008: Create Package Structure and Verify Project Compilation
 **Class:** rewrite  
-**Shape:** structure  
+**Shape**: structure
 **Target design:** → `src/main/java/com/demo/.gitkeep` and build verification
 
 **Legacy evidence:** Package mapping requirement (migration.yaml:8) and project compilation requirement  
