@@ -111,3 +111,4 @@ Appended by the Hermes orchestrator after every task (see
 
 ## Operator correction (O-M5EVALDELETE)
 Evaluate r1/r2 deleted springdatajpa and broke pom; restored. task sensor GREEN after restore — REMAINING must not claim compile-block without sensors.sh evidence.
+T-005 | infer | 1 | COMPLETED | src/test/java/com/demo/service/ClinicServiceImplTest.java, src/test/java/com/demo/service/UserServiceImplTest.java, src/main/java/com/demo/mapper/OwnerMapper.java, src/main/java/com/demo/mapper/PetMapper.java, src/main/java/com/demo/mapper/VetMapper.java
