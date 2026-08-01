@@ -16,7 +16,6 @@
 
 package com.demo.repository.springdatajpa;
 
-import com.demo.model.Specialty;
 import com.demo.repository.SpecialtyRepository;
 
 /**

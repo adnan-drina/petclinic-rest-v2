@@ -16,7 +16,6 @@
 
 package com.demo.repository.springdatajpa;
 
-import com.demo.model.PetType;
 import com.demo.repository.PetTypeRepository;
 
 /**

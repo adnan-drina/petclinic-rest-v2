@@ -15,7 +15,6 @@
  */
 package com.demo.repository.springdatajpa;
 
-import com.demo.model.Visit;
 import com.demo.repository.VisitRepository;
 
 /**

@@ -18,7 +18,6 @@ package com.demo.repository.springdatajpa;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import com.demo.model.Pet;
 import com.demo.model.PetType;
 import com.demo.repository.PetRepository;
 

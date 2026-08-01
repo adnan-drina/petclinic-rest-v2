@@ -15,7 +15,6 @@
  */
 package com.demo.repository.springdatajpa;
 
-import com.demo.model.Vet;
 import com.demo.repository.VetRepository;
 
 /**
