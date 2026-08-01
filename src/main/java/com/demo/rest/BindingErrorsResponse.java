@@ -35,10 +35,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class BindingErrorsResponse {
 
     public BindingErrorsResponse() {
+        this(null);
     }
 
-    public BindingErrorsResponse(Integer pathId) {
-        this(pathId, null);
+    public BindingErrorsResponse(Integer id) {
+        this(null, id);
     }
 
     public BindingErrorsResponse(Integer pathId, Integer bodyId) {
@@ -52,11 +53,11 @@ public class BindingErrorsResponse {
         }
     }
 
-    protected void addBodyIdError(Integer bodyId, String message) {
+    private void addBodyIdError(Integer bodyId, String message) {
         BindingError error = new BindingError();
         error.setObjectName("body");
         error.setFieldName("id");
-        error.setFieldValue(bodyId != null ? bodyId.toString() : "null");
+        error.setFieldValue(bodyId.toString());
         error.setErrorMessage(message);
         addError(error);
     }

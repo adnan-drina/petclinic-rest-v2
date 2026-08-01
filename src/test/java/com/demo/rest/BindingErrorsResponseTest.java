@@ -27,9 +27,13 @@ class BindingErrorsResponseTest {
 
     @Test
     void constructorWithIdOnly() {
+        // Harvested single-arg ctor is this(null, id) — bodyId-only path
         BindingErrorsResponse response = new BindingErrorsResponse(42);
         String json = response.toJSON();
-        assertEquals("[]", json); // No errors for just path ID
+        assertTrue(json.contains("body"));
+        assertTrue(json.contains("id"));
+        assertTrue(json.contains("must not be specified"));
+        assertTrue(json.contains("42"));
     }
 
     @Test

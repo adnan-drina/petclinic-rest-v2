@@ -80,8 +80,9 @@ class EntityUtilsTest {
 
     @Test
     void utilityClassCannotBeInstantiated() {
+        // private ctor on abstract util — reflection without setAccessible → IllegalAccessException
         assertThrows(
-            InstantiationException.class,
+            IllegalAccessException.class,
             () -> EntityUtils.class.getDeclaredConstructor().newInstance()
         );
     }
