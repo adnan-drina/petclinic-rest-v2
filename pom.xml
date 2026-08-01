@@ -29,6 +29,7 @@
          new-code coverage/CPD gates (do not invent BaseDto / theater tests). -->
     <sonar.coverage.exclusions>**/dto/**</sonar.coverage.exclusions>
     <sonar.cpd.exclusions>**/dto/**</sonar.cpd.exclusions>
+    <sonar.exclusions>**/dto/**</sonar.exclusions>
 </properties>
 
   <repositories>

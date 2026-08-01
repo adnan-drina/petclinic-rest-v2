@@ -78,7 +78,8 @@ class PetTest {
     void getVisitsReturnsUnmodifiableList() {
         Pet pet = new Pet();
         List<Visit> visits = pet.getVisits();
-        assertThrows(UnsupportedOperationException.class, () -> visits.add(new Visit()));
+        Visit visit = new Visit();
+        assertThrows(UnsupportedOperationException.class, () -> visits.add(visit));
     }
 
     @Test
