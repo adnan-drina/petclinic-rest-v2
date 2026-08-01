@@ -3,6 +3,7 @@ package com.demo.repository.jpa;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -164,15 +165,20 @@ class JpaRepositoriesIT {
 
         springDataVisits.delete(visit);
         springDataPets.delete(pets.findById(pet.getId()));
+        assertTrue(visits.findAll().stream().noneMatch(v -> "nails".equals(v.getDescription())));
 
         Specialty surgery = new Specialty();
         surgery.setName("surgery");
         specialties.save(surgery);
+        Integer surgeryId = surgery.getId();
         springDataSpecialties.delete(surgery);
+        assertTrue(specialties.findAll().stream().noneMatch(s -> surgeryId.equals(s.getId())));
 
         PetType bird = new PetType();
         bird.setName("bird");
         petTypes.save(bird);
+        Integer birdId = bird.getId();
         springDataPetTypes.delete(bird);
+        assertTrue(petTypes.findAll().stream().noneMatch(t -> birdId.equals(t.getId())));
     }
 }

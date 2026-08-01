@@ -239,4 +239,39 @@ class JdbcRepositoryCoverageTest {
         assertEquals(1, jp.getTypeId());
         assertEquals(1, jp.getOwnerId());
     }
+
+    @Test
+    void jdbcDeleteAndSavePaths() throws Exception {
+        Visit visit = visits.findById(1);
+        visits.delete(visit);
+        Pet pet = pets.findById(1);
+        pets.delete(pet);
+
+        try (Connection c = dataSource.getConnection(); Statement st = c.createStatement()) {
+            st.execute("INSERT INTO types (name) VALUES ('hamster')");
+            st.execute(
+                "INSERT INTO pets (name, birth_date, type_id, owner_id) "
+                    + "VALUES ('Ham', DATE '2020-01-01', "
+                    + "(SELECT id FROM types WHERE name='hamster'), 1)");
+            st.execute(
+                "INSERT INTO visits (pet_id, visit_date, description) "
+                    + "VALUES ((SELECT id FROM pets WHERE name='Ham'), DATE '2021-01-01', 'v')");
+        }
+        PetType hamster = petTypes.findAll().stream()
+            .filter(t -> "hamster".equals(t.getName()))
+            .findFirst()
+            .orElseThrow();
+        petTypes.delete(hamster);
+
+        Specialty neurology = new Specialty();
+        neurology.setName("neurology");
+        specialties.save(neurology);
+        assertNotNull(neurology.getId());
+        specialties.delete(neurology);
+
+        Vet vet = vets.findById(1);
+        vets.delete(vet);
+        assertTrue(vets.findAll().isEmpty() || vets.findAll().stream()
+            .noneMatch(v -> Integer.valueOf(1).equals(v.getId())));
+    }
 }
