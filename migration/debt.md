@@ -8,3 +8,7 @@ skill, better sensor) — never by weakening the sensors.
 (none)
 
 
+
+## T-005 — milestone RED
+- head: 09fa7ca
+- reason: O-SFIXNOSPRING: sfix reintroduced Spring (commit reset)
