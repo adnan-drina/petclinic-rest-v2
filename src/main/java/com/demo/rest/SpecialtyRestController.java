@@ -29,7 +29,6 @@ import com.demo.dto.SpecialtyDto;
 import com.demo.mapper.SpecialtyMapper;
 import com.demo.model.Specialty;
 import com.demo.service.ClinicService;
-import com.demo.rest.BindingErrorsResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
