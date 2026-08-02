@@ -26,6 +26,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 import com.demo.dto.VetDto;
+import com.demo.security.Roles;
+import jakarta.annotation.security.RolesAllowed;
 import com.demo.mapper.SpecialtyMapper;
 import com.demo.mapper.VetMapper;
 import com.demo.model.Specialty;
@@ -39,6 +41,7 @@ import java.util.Collection;
  */
 
 @RequestScoped
+@RolesAllowed(Roles.VET_ADMIN)
 @Path("/api/vets")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
