@@ -175,3 +175,4 @@ T-006: infer task completed - finding-scope boundaries verified. Repository file
 |||| METRICS: src_main_java=83 src_test_java=19 residual_incidents=12
 |||| Honest resolve: 16/24 = 66.7% (excludes absent-not-landed, scaffold, new-after)
 | T-001 | infer | 1 | COMPLETED | src/main/java/com/demo/rest/OwnerRestController.java, src/main/java/com/demo/rest/BindingErrorsResponse.java |
+T-005, infer, 1 attempt, SUCCESS, src/main/java/com/demo/rest/SpecialtyRestController.java
