@@ -29,7 +29,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void saveUserThrowsWhenRolesNull() throws Exception {
+    void saveUserThrowsWhenRolesNull(){
         User user = new User();
         user.setUsername("testuser");
         user.setRoles(null);
@@ -40,7 +40,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void saveUserThrowsWhenRolesEmpty() throws Exception {
+    void saveUserThrowsWhenRolesEmpty(){
         User user = new User();
         user.setUsername("testuser");
         user.setRoles(new HashSet<>());

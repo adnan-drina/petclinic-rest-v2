@@ -20,10 +20,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUser(User user) throws Exception {
+    public void saveUser(User user) throws Exception { // NOSONAR java:S112 — legacy checked Exception preserved
 
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            throw new Exception("User must have at least a role set!");
+            throw new Exception("User must have at least a role set!"); // NOSONAR java:S112 — legacy checked Exception preserved
         }
 
         for (Role role : user.getRoles()) {

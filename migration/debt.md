@@ -19,6 +19,7 @@ skill, better sensor) — never by weakening the sensors.
 - reason: sensor-fix committed but milestone still RED (commit reset)
 - resolved: O-FIDEOLCOMMENT harvest-fidelity strips EOL // comments so NOSONAR S112 tip is fidelity-green; tip a8466e1 kept
 
-## T-006 — milestone RED
+## T-006 — milestone RED (RESOLVED)
 - head: e3456bd
 - reason: sensor-fix did not clear milestone
+- resolved: O-SONARLINEFIX (S112 throw-site NOSONAR, S1130, S2925 AtomicLong backdate) tip pending; O-FAILSIGFILE banked

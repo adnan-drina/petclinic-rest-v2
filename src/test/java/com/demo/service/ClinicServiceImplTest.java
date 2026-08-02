@@ -26,6 +26,8 @@ import com.demo.repository.PetTypeRepository;
 import com.demo.repository.SpecialtyRepository;
 import com.demo.repository.VetRepository;
 import com.demo.repository.VisitRepository;
+import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicLong;
 
 class ClinicServiceImplTest {
 
@@ -322,14 +324,23 @@ class ClinicServiceImplTest {
     }
 
     @Test
-    void findVetsRefreshesAfterInterval() throws InterruptedException {
+    void findVetsRefreshesAfterInterval() throws Exception {
         List<Vet> vets = new ArrayList<>();
         vets.add(new Vet());
         when(vetRepository.findAll()).thenReturn(vets);
 
         clinicService.findVets();
 
-        Thread.sleep(61_000);
+        // O-SONARLINEFIX S2925: backdate AtomicLong last*Refresh instead of Thread.sleep
+        Field lastRefresh = null;
+        for (Field f : ClinicServiceImpl.class.getDeclaredFields()) {
+            if (AtomicLong.class.isAssignableFrom(f.getType()) && f.getName().toLowerCase().contains("refresh")) {
+                lastRefresh = f; break;
+            }
+        }
+        org.junit.jupiter.api.Assertions.assertNotNull(lastRefresh);
+        lastRefresh.setAccessible(true);
+        ((AtomicLong) lastRefresh.get(clinicService)).set(System.currentTimeMillis() - 61000);
 
         clinicService.findVets();
         verify(vetRepository, times(2)).findAll();
