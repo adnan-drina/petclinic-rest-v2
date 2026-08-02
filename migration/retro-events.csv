@@ -113,3 +113,34 @@ epoch,stage,attempt,class,action
 1785618445,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-7p2lg
 1785618445,m5-ship,0,story_gate_pass,non-deploy story
 1785618445,m5-ship,0,debt_retained,unresolved
+1785621198,T-001,0,rule:springboot-di-to-quarkus-00003,worker_green
+1785621430,T-002,0,rule:springboot-di-to-quarkus-00003,worker_green
+1785621921,T-003,0,sensor_red_post_commit,verify
+1785622104,T-003,0,sfix_worker_first,milestone
+1785622321,T-003,0,sfix_minimax_rescue,milestone:1
+1785623224,T-003,0,sfix_committed_still_red,verify
+1785623225,T-003,0,debt_recorded,milestone
+1785623544,T-001,0,rule:springboot-di-to-quarkus-00003,escw
+1785623675,T-002,0,rule:springboot-di-to-quarkus-00003,escw
+1785623697,T-003,0,already_complete,absent:springboot-di-to-quarkus-00003
+1785623697,T-003,0,rule:springboot-di-to-quarkus-00003,already_complete
+1785624223,T-004,0,rule:springboot-di-to-quarkus-00003,worker_green
+1785624307,T-005,0,worker_wedge_class,READ_THRASH
+1785624331,T-005,0,escalation_cause,worker-failed
+1785625325,T-005,1,no_commit,retrying
+1785626117,T-005,2,no_commit,retrying
+1785626288,T-005,2,mechanical_commit,closure
+1785626288,T-005,0,rule:springboot-di-to-quarkus-00003,escalation
+1785626883,T-006,0,escalation_cause,worker-failed
+1785627127,T-006,1,success,commit
+1785627127,scope,0,scope_violation,src/main/java/com/demo/mapper/OwnerMapper.java src/main/java/com/demo/mapper/PetMapper.java src/main/java/com/demo/mapper/VetMapper.java
+1785627468,T-006,0,rule:springboot-di-to-quarkus-00003,escw
+1785627692,T-006,0,sensor_red_post_commit,verify
+1785628024,T-006,0,style_autofix,partial
+1785628024,T-006,0,sfix_worker_first,milestone
+1785628925,T-006,0,sfix_minimax_rescue,milestone:1
+1785629989,T-006,0,debt_recorded,milestone
+1785631211,m5-evaluate,1,success,commit
+1785631659,m5-ship,0,pipeline_succeeded,petclinic-rest-v2-push-4gnsd
+1785631659,m5-ship,0,story_gate_pass,non-deploy story
+1785631659,m5-ship,0,debt_retained,unresolved
