@@ -73,11 +73,8 @@ public class VisitRestController {
     @POST
     @Transactional
     public Response addVisit(@Valid @NotNull VisitDto visitDto) {
-        BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse();
-        if (visitDto.getId() != null) {
-            bindingErrorsResponse.addBodyIdError(null, visitDto.getId());
-        }
-        if (bindingErrorsResponse.hasErrors() || visitDto.getId() != null) {
+        BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(null, visitDto.getId());
+        if (bindingErrorsResponse.hasErrors()) {
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(bindingErrorsResponse)
                 .build();
@@ -93,8 +90,7 @@ public class VisitRestController {
     @Transactional
     public Response updateVisit(@PathParam("visitId") int visitId, @Valid @NotNull VisitDto visitDto) {
         BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(visitId, visitDto.getId());
-        boolean bodyIdMatchesPathId = visitDto.getId() == null || visitId == visitDto.getId();
-        if (bindingErrorsResponse.hasErrors() || !bodyIdMatchesPathId) {
+        if (bindingErrorsResponse.hasErrors()) {
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(bindingErrorsResponse)
                 .build();

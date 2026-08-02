@@ -79,11 +79,8 @@ public class PetRestController {
     @POST
     @Transactional
     public Response addPet(@Valid @NotNull PetDto petDto) {
-        BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse();
-        if (petDto.getId() != null) {
-            bindingErrorsResponse.addBodyIdError(null, petDto.getId());
-        }
-        if (bindingErrorsResponse.hasErrors() || petDto.getId() != null) {
+        BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(null, petDto.getId());
+        if (bindingErrorsResponse.hasErrors()) {
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(bindingErrorsResponse)
                 .build();
@@ -99,8 +96,7 @@ public class PetRestController {
     @Transactional
     public Response updatePet(@PathParam("petId") int petId, @Valid @NotNull PetDto petDto) {
         BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(petId, petDto.getId());
-        boolean bodyIdMatchesPathId = petDto.getId() == null || petId == petDto.getId();
-        if (bindingErrorsResponse.hasErrors() || !bodyIdMatchesPathId) {
+        if (bindingErrorsResponse.hasErrors()) {
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(bindingErrorsResponse)
                 .build();

@@ -77,11 +77,8 @@ public class VetRestController {
     @POST
     @Transactional
     public Response addVet(@Valid @NotNull VetDto vetDto) {
-        BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse();
-        if (vetDto.getId() != null) {
-            bindingErrorsResponse.addBodyIdError(null, vetDto.getId());
-        }
-        if (bindingErrorsResponse.hasErrors() || vetDto.getId() != null) {
+        BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(null, vetDto.getId());
+        if (bindingErrorsResponse.hasErrors()) {
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(bindingErrorsResponse)
                 .build();
@@ -97,8 +94,7 @@ public class VetRestController {
     @Transactional
     public Response updateVet(@PathParam("vetId") int vetId, @Valid @NotNull VetDto vetDto) {
         BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(vetId, vetDto.getId());
-        boolean bodyIdMatchesPathId = vetDto.getId() == null || vetId == vetDto.getId();
-        if (bindingErrorsResponse.hasErrors() || !bodyIdMatchesPathId) {
+        if (bindingErrorsResponse.hasErrors()) {
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(bindingErrorsResponse)
                 .build();
