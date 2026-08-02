@@ -23,3 +23,7 @@ skill, better sensor) — never by weakening the sensors.
 - head: e3456bd
 - reason: sensor-fix did not clear milestone
 - resolved: O-SONARLINEFIX (S112 throw-site NOSONAR, S1130, S2925 AtomicLong backdate) tip pending; O-FAILSIGFILE banked
+
+## T-001 — task RED
+- head: 8013cea
+- reason: sensor-fix did not clear task
