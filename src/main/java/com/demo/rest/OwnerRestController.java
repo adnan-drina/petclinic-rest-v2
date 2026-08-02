@@ -37,7 +37,7 @@ import java.util.Collection;
  */
 
 @RequestScoped
-@Path("/owners")
+@Path("/api/owners")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class OwnerRestController {

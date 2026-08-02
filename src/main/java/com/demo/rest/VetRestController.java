@@ -39,7 +39,7 @@ import java.util.Collection;
  */
 
 @RequestScoped
-@Path("/vets")
+@Path("/api/vets")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VetRestController {

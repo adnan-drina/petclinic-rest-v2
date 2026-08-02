@@ -36,7 +36,7 @@ import com.demo.service.UserService;
  * @author Vitaliy Fedoriv
  */
 @RequestScoped
-@Path("/users")
+@Path("/api/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserRestController {

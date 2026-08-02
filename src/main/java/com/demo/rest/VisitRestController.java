@@ -37,7 +37,7 @@ import java.util.Collection;
  */
 
 @RequestScoped
-@Path("/visits")
+@Path("/api/visits")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VisitRestController {

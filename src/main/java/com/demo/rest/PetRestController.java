@@ -37,7 +37,7 @@ import java.util.Collection;
  */
 
 @RequestScoped
-@Path("/pets")
+@Path("/api/pets")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PetRestController {
