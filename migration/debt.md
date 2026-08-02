@@ -28,3 +28,7 @@ skill, better sensor) — never by weakening the sensors.
 - head: 8013cea
 - reason: sensor-fix did not clear task
 - resolved: sfix introduced broken OwnerRestControllerTest (discarded); task sensor GREEN after discard; BindingErrorsResponse kept via scope-revert commit a097f5e
+
+## T-001 — task RED
+- head: ac42141
+- reason: sensor-fix did not clear task
