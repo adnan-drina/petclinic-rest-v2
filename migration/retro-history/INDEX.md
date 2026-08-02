@@ -8,3 +8,4 @@ Prior `retro-proposals.md` snapshots. Newest current file is
 - `20260801T210725Z-S04.md` — archived before next Retro (S04)
 - `20260802T004739Z-S05.md` — archived before next Retro (S05)
 - `20260802T063205Z-S06.md` — archived before next Retro (S06)
+- `20260802T091230Z-S07.md` — archived before next Retro (S07)
