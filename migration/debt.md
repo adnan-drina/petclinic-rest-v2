@@ -24,6 +24,7 @@ skill, better sensor) — never by weakening the sensors.
 - reason: sensor-fix did not clear milestone
 - resolved: O-SONARLINEFIX (S112 throw-site NOSONAR, S1130, S2925 AtomicLong backdate) tip pending; O-FAILSIGFILE banked
 
-## T-001 — task RED
+## T-001 — task RED (RESOLVED)
 - head: 8013cea
 - reason: sensor-fix did not clear task
+- resolved: sfix introduced broken OwnerRestControllerTest (discarded); task sensor GREEN after discard; BindingErrorsResponse kept via scope-revert commit a097f5e
