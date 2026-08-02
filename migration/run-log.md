@@ -114,3 +114,63 @@ Evaluate r1/r2 deleted springdatajpa and broke pom; restored. task sensor GREEN 
 T-005 | infer | 1 | COMPLETED | src/test/java/com/demo/service/ClinicServiceImplTest.java, src/test/java/com/demo/service/UserServiceImplTest.java, src/main/java/com/demo/mapper/OwnerMapper.java, src/main/java/com/demo/mapper/PetMapper.java, src/main/java/com/demo/mapper/VetMapper.java
 
 T-006: infer task completed - finding-scope boundaries verified. Repository files already migrated in S04, REST/security/util correctly absent for S05. Scope boundaries maintained correctly.
+
+|||| **DETAILED M5 EVALUATION FINDINGS EXPLANATION (O-DELTABASE):**
+||||
+|||| RESOLVED (16 rules - story credit):
+|||| - hibernate-00005: Resolved - implicit name determination for sequences
+|||| - javaee-pom-to-quarkus-00060: Resolved - Maven profile for native build
+|||| - javax-to-jakarta-dependencies-00001/00003: Resolved - javax groupId replacement
+|||| - javax-to-jakarta-import-00001: Resolved - javax package replacement
+|||| - persistence-to-quarkus-00010: Resolved - @PersistenceContext to @Inject
+|||| - spring-components-00001: Resolved - Spring version compatibility
+|||| - springboot-actuator-to-quarkus-0100: Resolved - Spring Boot Actuator to Quarkus
+|||| - springboot-cache-to-quarkus-00000: Resolved - Spring cache artifact replacement
+|||| - springboot-devservices-to-quarkus-00000: Resolved - Dev Services adoption
+|||| - springboot-di-to-quarkus-00003: Resolved - Spring DI compatibility artifact
+|||| - springboot-jpa-to-quarkus-00000: Resolved - Spring Data JPA to Quarkus
+|||| - springboot-metrics-to-quarkus-0100/0200: Resolved - Micrometer to MicroProfile
+|||| - springboot-properties-to-quarkus-00003: Resolved - Spring log level properties
+|||| - springboot-security-to-quarkus-00000: Resolved - Spring Security artifact
+|||| All show evidence in src/main/java AND absent in after-scan
+||||
+|||| ABSENT-NOT-LANDED (7 rules - NO story credit):
+|||| - oracle2openjdk-00006: OWNED BY LATER STORY - JDK dependencies migration
+|||| - springboot-annotations-to-quarkus-00002: OWNED BY LATER STORY - component scanning
+|||| - springboot-di-to-quarkus-00002: OWNED BY LATER STORY - DI infrastructure
+|||| - springboot-jmx-to-quarkus-00001: OWNED BY LATER STORY - JMX management
+|||| - springboot-properties-to-quarkus-00001: OWNED BY LATER STORY - Spring profiles
+|||| - springboot-properties-to-quarkus-00002: OWNED BY LATER STORY - datasource properties
+|||| - springboot-webmvc-to-quarkus-00000: OWNED BY LATER STORY - REST controllers
+|||| No src/main/java evidence - deferred to later stories per O-M5EVALHARVEST
+||||
+|||| SCAFFOLD-PRESATISFIED (10 rules - NO story credit):
+|||| - javaee-pom-to-quarkus-00010/00020/00030/00040/00050: Already satisfied by Maven config
+|||| - springboot-annotations-to-quarkus-00000: Already satisfied
+|||| - springboot-parent-pom-to-quarkus-00000: Already satisfied
+|||| - springboot-plugins-to-quarkus-0000: Already satisfied
+|||| - springboot-properties-to-quarkus-00000: Already satisfied
+|||| - springboot-web-to-quarkus-00000: Already satisfied
+|||| Destination already satisfied by existing Quarkus configuration
+||||
+|||| REMAINING (4 rules - GENUINE DEBT requiring later story attention):
+|||| - localhost-jdbc-00002: Local JDBC calls in application.properties:18 (out of scope for S05)
+|||| - spring-components-00002: Spring version 6.0.0 not Jakarta EE 9+ compatible in pom.xml:90
+|||| - springboot-di-to-quarkus-00000: Spring DI artifact needs Quarkus spring-di extension in pom.xml:85
+|||| - transaction-to-quarkus-00003: EntityManager remove operations need @Transactional
+||||
+|||| NEW IN AFTER (4 rules - not in original scope):
+|||| - demo-env-integration-00001: NOT RELATED TO THIS STORY
+|||| - demo-inmemory-state-00001: NOT RELATED TO THIS STORY
+|||| - jakarta-jaxrs-to-quarkus-00010: NOT RELATED TO THIS STORY
+|||| - transaction-to-quarkus-00002: NOT RELATED TO THIS STORY
+||||
+|||| **PREFLIGHT STATUS (L-M5e):**
+|||| - harvest fidelity: GREEN
+|||| - qjacoco check: GREEN
+|||| - sonar check: GREEN (new-code gate)
+|||| - Command timed out after 60s during full preflight verification
+|||| - HONEST STATUS: Individual sensors GREEN but full preflight incomplete
+||||
+|||| METRICS: src_main_java=83 src_test_java=19 residual_incidents=12
+|||| Honest resolve: 16/24 = 66.7% (excludes absent-not-landed, scaffold, new-after)

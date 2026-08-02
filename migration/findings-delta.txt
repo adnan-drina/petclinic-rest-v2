@@ -1,8 +1,8 @@
 # Findings delta (O-DELTABASE — absence ≠ resolved)
 
-METRIC src_main_java=79 src_test_java=15
-METRIC residual_incidents src/main=10 src/test=0 pom=2 props=0 other=0
-SUMMARY resolved=17 absent_not_landed=7 deferred_by_decision=0 scaffold_presatisfied=10 remaining=3 new_after=2 honest_resolve_pct=63.0 in_scope_resolve_pct=63.0
+METRIC src_main_java=83 src_test_java=19
+METRIC residual_incidents src/main=12 src/test=0 pom=3 props=0 other=0
+SUMMARY resolved=16 absent_not_landed=7 deferred_by_decision=0 scaffold_presatisfied=10 remaining=4 new_after=4 honest_resolve_pct=59.3 in_scope_resolve_pct=59.3
 
 ## RESOLVED (landed evidence + rule absent after)
 - hibernate-00005
@@ -12,7 +12,6 @@ SUMMARY resolved=17 absent_not_landed=7 deferred_by_decision=0 scaffold_presatis
 - javax-to-jakarta-import-00001
 - persistence-to-quarkus-00010
 - spring-components-00001
-- spring-components-00002
 - springboot-actuator-to-quarkus-0100
 - springboot-cache-to-quarkus-00000
 - springboot-devservices-to-quarkus-00000
@@ -49,11 +48,14 @@ SUMMARY resolved=17 absent_not_landed=7 deferred_by_decision=0 scaffold_presatis
 
 ## REMAINING (still in after-scan)
 - localhost-jdbc-00002
+- spring-components-00002
 - springboot-di-to-quarkus-00000
 - transaction-to-quarkus-00003
 
 ## NEW IN AFTER (not in before)
 - demo-env-integration-00001
+- demo-inmemory-state-00001
 - jakarta-jaxrs-to-quarkus-00010
+- transaction-to-quarkus-00002
 
-DELTABASE:resolved=17:absent=7:deferred=0:presat=10:remaining=3
+DELTABASE:resolved=16:absent=7:deferred=0:presat=10:remaining=4
