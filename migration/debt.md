@@ -34,6 +34,7 @@ skill, better sensor) — never by weakening the sensors.
 - reason: sensor-fix did not clear task
 - resolved: false RED from untracked OwnerRestControllerTest (wrong 3-arg ctor) left by orphan/sfix; discarded; sensors.sh task GREEN; substance tip remains 8013cea
 
-## T-004 — milestone RED
+## T-004 — milestone RED (RESOLVED)
 - head: 447767a
 - reason: sensor-fix did not clear milestone
+- resolved: lead fixed S2589 (BindingErrorsResponse ctor); sensors.sh sonar GREEN; O-SFIXMILESTONE durableized in supervisor SFIX_PROMPT
