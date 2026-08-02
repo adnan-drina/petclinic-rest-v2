@@ -1,110 +1,122 @@
-# Retro: petclinic-rest-v2 (Latest Story)
+# Retro: petclinic-rest-v2 (Latest Story - S06 REST API Migration)
 
 ## Brief updates (auto-applicable)
 
-No brief updates needed - discovered.md contains no actionable items for remaining story briefs. All remaining stories (S06-S07) are independent and do not require auto-applied edits based on this story's execution.
+No brief updates needed - discovered.md contains no actionable items for remaining story briefs. All remaining stories (S07) is independent and does not require auto-applied edits based on this story's execution.
 
 ## Skill / harness proposals (human-only)
 
 ### (1) The three costliest failure patterns of THIS story/run, citing evidence:
 
-**Pattern 1: Sensor-Fix Escalation Loop Exhaustion**
-- **Evidence**: `retro-events.csv` lines 36-37, 77-78, 93-94, 134-135 show 4 `sfix_worker_first` + 4 `sfix_minimax_rescue` cycles totaling 8 escalation sessions. `retro-metrics.csv` shows T-004-sfix-r1 (902s), T-008-sfix-r1 (901s), T-003-sfix-r1 (529s) consuming 2,332 seconds across failed escalation attempts.
-- **Impact**: Systematic escalation patterns across multiple tasks (T-003, T-004, T-005, T-008) consuming disproportionate budget before mechanical resolution.
-- **Cost**: 8 escalation sessions + 3,200+ wasted seconds on failed sensor-fix attempts.
+**Pattern 1: Systematic Worker Task Failure with READ_THRASH Classification**
+- **Evidence**: `retro-events.csv` lines 52-53 (T-009), 73-74 (T-010), 91-92 (T-010) show multiple `worker_wedge_class: READ_THRASH` followed by `escalation_cause: worker-failed`. `retro-metrics.csv` shows T-009-a1p0 (416s), T-010-a1p0 (845s), T-010-a2p0 (57s) consuming 1,318 seconds across failed tasks.
+- **Impact**: Worker sessions getting stuck in read-thrash loops requiring escalation and mechanical commits for closure, indicating systematic packet design issues with REST controller complexity.
+- **Cost**: 3 worker-failed escalations + 2 mechanical commits (retro-events.csv lines 77, 86) consuming 1,300+ seconds.
 
-**Pattern 2: Preflight Sensor Memory Exhaustion (Exit Code 137/SIGKILL)**
-- **Evidence**: `retro-events.csv` lines 39-40, 63-68, 99-104 show 6 `preflight_red` events requiring 12 preflightfix sessions. `retro-metrics.csv` shows multiple preflightfix sessions with rc=137 (SIGKILL/memory) including preflightfix-r2-a1p0 (903s timeout) and preflightfix-r2-a2p0 (16s rapid failure).
-- **Impact**: Memory exhaustion forcing repeated preflight attempts, consuming 2,000+ session seconds across 2 rounds and blocking story completion.
-- **Cost**: 12 preflightfix sessions totaling ~2,500 seconds, with 6 no_commit retrying events and 2 quota events.
+**Pattern 2: Preflight Sensor Memory Exhaustion (Exit Code 137/SIGKILL)**  
+- **Evidence**: `retro-events.csv` lines 100-101 (preflight_red), 102-107 (multiple preflightfix sessions). `retro-metrics.csv` shows preflightfix-r1-a1p0 (651s), preflightfix-r2-a1p0 (19s), preflightfix-r2-a2p0 (45s) with rc=137 (SIGKILL) indicating memory exhaustion.
+- **Impact**: Preflight sensors repeatedly failing due to memory constraints, requiring multiple fix attempts and consuming 700+ session seconds while blocking shipping completion.
+- **Cost**: 3 preflightfix sessions totaling ~715 seconds with memory kills preventing preflight completion.
 
-**Pattern 3: Worker Task Failure with READ_THRASH Classification**
-- **Evidence**: `retro-events.csv` lines 57-58 show T-006 experiencing `worker_wedge_class: READ_THRASH` followed by `escalation_cause: worker-failed`. `retro-events.csv` lines 67-68 show T-005 experiencing similar `worker_wedge_class: READ_THRASH` followed by `escalation_cause: worker-failed`. `retro-events.csv` lines 130-132 show T-005 requiring mechanical commit (lines 47, 69).
-- **Impact**: Tasks stuck in read-thrash loops requiring worker-failed escalations and mechanical commits for closure, indicating systematic packet design issues.
-- **Cost**: 4 worker-failed escalations across T-005 and T-006, with mechanical commits needed to resolve stuck sessions.
+**Pattern 3: Sensor-Fix Escalation Loop Without Root Cause Resolution**
+- **Evidence**: `retro-events.csv` lines 32-35 (T-004 style_autofix + sfix_worker_first + sfix_minimax_rescue), 95-99 (deployfix-r1 style_autofix + sfix_worker_first). `retro-metrics.csv` shows T-004-sfix-w (900s), T-004-sfix-r1 (902s) consuming 1,802 seconds across failed sensor-fix escalation attempts.
+- **Impact**: Systematic escalation patterns attempting sensor fixes without addressing underlying memory/resource issues, consuming disproportionate budget before mechanical resolution.
+- **Cost**: 2 escalation cycles consuming 1,800+ seconds on failed fix attempts when mechanical commits would have resolved faster.
 
 ### (2) For each pattern one CONCRETE proposed change to a specific skill or sensor:
 
-**Change 1: Sensor-Fix Escalation Budget Hard Limit**
+**Change 1: Worker READ_THRASH Prevention with Packet Complexity Limits**
 ```
 File: .hermes/skills/migration-harness/EXECUTION.md
-Section: "On sensor failure" (around line 67-73)
-Current: "Iteration budget: 2 attempts per task"
-Proposed Change: "O-ESCALATION-BUDGET-HARD: Max 2 total escalation attempts per task (1 worker + 1 rescue) before automatic mechanical commit closure. RC=124/130/137 timeout/failure codes indicate systematic sensor miscalibration, not task-level issues requiring infinite retry. Pattern evidence shows 8 escalation cycles consuming 3,200+ seconds across T-003/T-004/T-005/T-008."
+Section: "Packet complexity — REST controller tasks" (around line 155-165)
+Current: "A worker packet covers ONE concern and at most ~8 files or violation sites."
+Proposed Change: "O-READTHRASH-PREVENTION: REST controller migration packets must limit to ≤4 files for Class: infer tasks involving JAX-RS conversion. Complex controller conversions (>4 endpoints) should be split into separate packets. Evidence: T-009/T-010 READ_THRASH followed by worker-failed escalations indicate packet design failure for complex REST API conversions."
 ```
 
-**Change 2: Preflight Memory Pre-Check and Skip Logic**
+**Change 2: Preflight Memory Pre-Check and Resource Management**
 ```
 File: .hermes/skills/migration-harness/SHIPPING.md
 Section: "Preflight sensor execution" (around line 58-70)
 Current: "Build verification: mvn -q clean verify PASSED"
-Proposed Addition: "O-PREFLIGHTMEMORY-EXHAUSTION: Preflight sensors require 4GB+ available memory. Add memory pre-check before preflight execution: MEMORY_AVAILABLE=$(free -m | awk '/^Mem:/{print $7}'). If <2048MB available, skip preflight and proceed with build verification only. Evidence: rc=137 SIGKILL failures across 12 preflightfix sessions indicate memory exhaustion from concurrent Maven processes."
+Proposed Addition: "O-PREFLIGHTMEMORY-PRECHECK: Preflight sensors require 3GB+ available memory. Add memory pre-check before preflight execution: MEMORY_AVAILABLE=$(free -m | awk '/^Mem:/{print $7}'). If <3072MB available, skip preflight and proceed with acceptance test verification only. Evidence: rc=137 SIGKILL failures across 3 preflightfix sessions indicate memory exhaustion from concurrent Maven + Quarkus processes."
 ```
 
-**Change 3: Worker READ_THRASH Prevention and Packet Size Limits**
+**Change 3: Sensor-Fix Escalation Budget with Automatic Mechanical Commit**
 ```
 File: .hermes/skills/migration-harness/EXECUTION.md
-Section: "Packet size — one concern, bounded scope" (around line 155-160)
-Current: "A worker packet covers ONE concern and at most ~8 files or violation sites."
-Proposed Change: "O-READTHRASH-PREVENTION: Worker packets must limit to ≤5 files or violation sites for Spring Data JPA conversion tasks. Class: infer packets that exceed this threshold are automatically rejected as READ_THRASH candidates. Evidence: T-005/T-006 READ_THRASH followed by worker-failed escalations indicate packet design failure, not worker capability."
+Section: "On sensor failure" (around line 67-75)
+Current: "Iteration budget: 2 attempts per task"
+Proposed Change: "O-ESCALATION-BUDGET-CAP: Max 1 escalation attempt per task (sfix_worker_first only) before automatic mechanical commit closure. RC=124/130/137 timeout/failure codes indicate systematic resource constraints, not task-level issues requiring infinite retry. Pattern evidence shows 2 escalation cycles consuming 1,800+ seconds when mechanical commits resolved similar issues faster."
 ```
 
 ### (3) ARTIFACT review of this story's commits (harvest fidelity, story-scope, fabrication):
 
 **Fidelity Assessment: GREEN**
-- All harvested artifacts maintained 1:1 legacy-to-target mapping for repository implementations
+- All harvested REST controllers maintained 1:1 Spring @RestController to JAX-RS @Path conversion
 - Package rename correctly applied: org.springframework.samples.petclinic → com.demo  
-- Spring Data JPA annotations properly converted to Quarkus Panache equivalents
-- No fabricated repository classes detected in commit history
+- Spring Web annotations properly converted to JAX-RS equivalents
+- No fabricated REST controller classes detected in commit history
 
 **Story-Scope Adherence: EXCELLENT**
-- All changes stayed within S04 repository layer modernization scope
-- JDBC, JPA, and Spring Data JPA repository implementations properly converted
+- All changes stayed within S06 REST API migration scope
+- REST controllers (OwnerRestController, VetRestController, etc.) properly converted from Spring to JAX-RS
 - Service layer dependencies properly maintained through interface preservation
-- Repository interfaces and implementations converted as circular dependency group
+- Security configurations correctly excluded (deferred to S07)
 
 **Evidence from commits**:
-- T-003: Repository layer harvest with proper CDI conversion (retro-events.csv line 71)
-- T-005: Worker wedge resolved through mechanical commit (retro-events.csv lines 47, 69)
-- M5 evaluation confirms repository modernization with appropriate test coverage
+- T-001: OwnerRestController conversion with proper JAX-RS annotations (retro-events.csv line 18)
+- T-002: SpecialtyRestController successful conversion (retro-events.csv line 29)  
+- T-007: Complex controller requiring multiple attempts but successful mechanical commit (retro-events.csv line 77)
+- M5 evaluation confirms REST API modernization with appropriate HTTP status code handling
+
+**Deployment Verification: GREEN**
+- Acceptance path check passed: route=200, 6 _array (retro-events.csv line 103)
+- Pipeline succeeded: petclinic-rest-v2-push-7d5cs (retro-events.csv line 102)
+- Application successfully deployed and serving REST endpoints
 
 ### (4) Harness waste:
 
-**Session Time Waste: ~8,000 seconds inefficiency**
-- 12 preflightfix sessions totaling ~2,500 seconds due to memory exhaustion
-- 8 escalation sessions (sfix_worker_first + sfix_minimax_rescue) consuming 3,200+ seconds
-- Multiple 800-900s timeout sessions indicating systematic sensor miscalibration
-- READ_THRASH worker failures consuming additional escalation budget
+**Session Time Waste: ~4,500 seconds inefficiency**
+- 3 preflightfix sessions totaling ~715 seconds due to memory exhaustion
+- 2 escalation cycles consuming 1,800+ seconds on failed sensor-fix attempts
+- 3 worker-failed tasks consuming 1,318+ seconds before mechanical resolution
+- Multiple 800-900s timeout sessions indicating systematic resource constraints
 
 **Sensor Redundancy: High inefficiency with diminishing returns**
-- Task sensor run multiple times (once per task + multiple preflight attempts)
-- Preflight sensor repeatedly failing on same memory conditions across attempts
+- Preflight sensor run 3 times with same memory exhaustion pattern
 - Sonar sensor timeout consuming full 60s limit when clearly failing due to resource constraints
+- Style autofix cycles repeatedly attempting fixes on resource-constrained environment
 
-**Escalation Pattern Waste: Systematic retry without root cause**
-- 8 escalation cycles attempting the same approach across different sessions
-- READ_THRASH classification indicates packet design issues, not execution issues
-- Quota exhaustion requiring M5 evaluate retry when mechanical commit would have resolved faster
+**Escalation Pattern Waste: Systematic retry without root cause**  
+- 2 escalation cycles attempting sensor fixes across different sessions
+- READ_THRASH classification indicates packet complexity issues, not execution capability
+- Multiple no_commit events suggesting packet boundaries misaligned with worker capacity
+
+**Resource Constraint Misdiagnosis**
+- Memory exhaustion treated as task-level sensor failures rather than infrastructure issues
+- Worker capacity limits not reflected in packet design for complex REST conversions
+- Preflight repeatedly attempted without addressing underlying memory constraints
 
 ## K10 hints (optional)
 
 For each Findings rule that this story solved cleanly:
 
 **For Findings Rule: springboot-di-to-quarkus-00003**
-- ✅ SOLVED: Repository implementations converted from @Repository + @Autowired to @ApplicationScoped with CDI constructor injection
-- Spring @Transactional properly converted to jakarta.transaction.Transactional
+- ✅ SOLVED: REST controllers converted from @Autowired constructor injection to CDI @Inject
+- Spring @Transactional properly converted to jakarta.transaction.Transactional where needed
 - No functional behavior changes introduced during CDI conversion
 
-**For Findings Rule: transaction-to-quarkus-00003**
-- ✅ SOLVED: Transaction management annotations properly migrated from Spring to Jakarta equivalents
-- Repository methods maintain exact transactional behavior through conversion
+**For Findings Rule: springboot-web-to-quarkus-00000**  
+- ✅ SOLVED: Spring @RestController/@RequestMapping properly converted to JAX-RS @Path/@GET/@POST/@PUT/@DELETE
+- HTTP status codes maintained exactly (404 NOT_FOUND, 400 BAD_REQUEST, 201 CREATED)
+- ExceptionMapper properly implemented for service unavailable errors (503)
 
-**For Findings Rule: springboot-jpa-to-quarkus-00000**  
-- ✅ SOLVED: Spring Data JPA repository interfaces properly converted to Quarkus Panache equivalents
-- Repository implementations maintain exact CRUD behavior and method signatures
+**For Findings Rule: oracle2openjdk-00006**
+- ✅ SOLVED: Oracle JDK-specific image handling replaced with standard Java image APIs
+- No functional behavior changes in REST endpoints
 
 ---
 
 ## Summary
 
-This story completed successfully but consumed disproportionate resources on systematic sensor calibration issues and worker packet design problems. The primary waste was escalation loops without addressing root causes (memory exhaustion, packet oversize) rather than repository conversion challenges. Future stories should benefit from hard escalation budget limits, preflight memory checks, and stricter packet size enforcement to prevent READ_THRASH conditions in complex migration tasks.
+This story completed successfully with shipping (route 200, 6 _array) but consumed disproportionate resources on systematic infrastructure constraints and worker packet design problems. The primary waste was treating memory exhaustion and worker capacity limits as task-level failures requiring escalation rather than recognizing them as infrastructure issues requiring different approaches. Future stories should implement hard escalation budget limits, preflight memory pre-checks, and stricter packet complexity enforcement for REST controller conversions to prevent resource exhaustion patterns.
