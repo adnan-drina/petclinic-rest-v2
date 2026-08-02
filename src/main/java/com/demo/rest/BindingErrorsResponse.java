@@ -53,6 +53,16 @@ public class BindingErrorsResponse {
         }
     }
 
+    public boolean hasErrors() {
+        return !bindingErrors.isEmpty();
+    }
+
+    public void addBodyIdError(Integer bodyId, Integer pathId) {
+        if (bodyId != null && pathId != null && !bodyId.equals(pathId)) {
+            addBodyIdError(bodyId, String.format("does not match pathId: %d", pathId));
+        }
+    }
+
     private void addBodyIdError(Integer bodyId, String message) {
         BindingError error = new BindingError();
         error.setObjectName("body");
