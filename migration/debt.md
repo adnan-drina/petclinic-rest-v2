@@ -38,3 +38,8 @@ skill, better sensor) — never by weakening the sensors.
 - head: 447767a
 - reason: sensor-fix did not clear milestone
 - resolved: lead fixed S2589 (BindingErrorsResponse ctor); sensors.sh sonar GREEN; O-SFIXMILESTONE durableized in supervisor SFIX_PROMPT
+
+## T-009 — task RED (RESOLVED)
+- head: 2f6e81c (archived O-SFIXSCOPE) / MiniMax attempt-2 burn
+- reason: O-SFIXSCOPE reset poison-test RED tip; escalation re-entry burned after kill; debt-freeze without durable mapper
+- resolved: lead tip 35b8197 narrow ExceptionMapper<Throwable> (V6 R6); PersistenceException→503; no Spring DAO; sensors.sh task GREEN post-commit
