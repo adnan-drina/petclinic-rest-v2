@@ -78,6 +78,10 @@ public class BindingErrorsResponse {
 		this.bindingErrors.add(bindingError);
 	}
 
+	public List<BindingError> getBindingErrors() {
+		return bindingErrors;
+	}
+
 	public void addAllErrors(Set<ConstraintViolation<?>> violations) {
 		for (ConstraintViolation<?> violation : violations) {
 			BindingError error = new BindingError();
@@ -111,6 +115,11 @@ public class BindingErrorsResponse {
 		private String fieldName;
 		private String fieldValue;
 		private String errorMessage;
+
+		public String getObjectName() { return objectName; }
+		public String getFieldName() { return fieldName; }
+		public String getFieldValue() { return fieldValue; }
+		public String getErrorMessage() { return errorMessage; }
 
 		public BindingError() {
 			this.objectName = "";
