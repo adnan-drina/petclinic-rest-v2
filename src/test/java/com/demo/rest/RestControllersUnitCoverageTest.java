@@ -3,7 +3,6 @@ package com.demo.rest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,7 +38,6 @@ import com.demo.model.Visit;
 import com.demo.service.ClinicService;
 import com.demo.service.UserService;
 
-import jakarta.ws.rs.core.Response;
 
 /**
  * Direct controller unit coverage for Sonar new_coverage (mutate branches
@@ -189,7 +187,7 @@ class RestControllersUnitCoverageTest {
     }
 
     @Test
-    void ownerPetVisitUserRootBranches() throws Exception {
+    void ownerBranches() {
         OwnerRestController oc = new OwnerRestController(clinicService, ownerMapper);
         when(clinicService.findOwnerByLastName("X")).thenReturn(new ArrayList<>());
         when(ownerMapper.toOwnerDtoCollection(anyCollection())).thenReturn(new ArrayList<>());
@@ -229,6 +227,10 @@ class RestControllersUnitCoverageTest {
         when(clinicService.findOwnerById(9)).thenReturn(null);
         assertEquals(404, oc.deleteOwner(9).getStatus());
 
+    }
+
+    @Test
+    void petBranches() {
         PetRestController pc = new PetRestController(clinicService, petMapper);
         Pet pet = new Pet();
         pet.setId(1);
@@ -266,6 +268,10 @@ class RestControllersUnitCoverageTest {
         when(clinicService.findPetById(9)).thenReturn(null);
         assertEquals(404, pc.deletePet(9).getStatus());
 
+    }
+
+    @Test
+    void visitBranches() {
         VisitRestController vc = new VisitRestController(clinicService, visitMapper);
         when(clinicService.findAllVisits()).thenReturn(new ArrayList<>());
         when(visitMapper.toVisitsDto(anyCollection())).thenReturn(new ArrayList<>());
@@ -297,6 +303,10 @@ class RestControllersUnitCoverageTest {
         when(clinicService.findVisitById(9)).thenReturn(null);
         assertEquals(404, vc.deleteVisit(9).getStatus());
 
+    }
+
+    @Test
+    void userAndRootBranches() throws Exception {
         UserRestController uc = new UserRestController(userService, userMapper);
         UserDto ud = new UserDto();
         ud.setUsername("u");
