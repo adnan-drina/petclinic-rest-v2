@@ -58,56 +58,64 @@ Appended by the Hermes orchestrator after every task (see
 ||| - These are ABSENT-NOT-LANDED per findings-delta.txt - not in this story's scope | | | | |
 ||| - Cannot harvest/fix these per O-M5EVALHARVEST constraint | | | | |
 ||| | | | | |
-||| **DETAILED FINDINGS EXPLANATION:** | | | | |
-||| | | | | |
-||| RESOLVED (17 rules - story credit): | | | | |
-||| - hibernate-00005: Resolved - implicit name determination for sequences | | | | |
-||| - javaee-pom-to-quarkus-00060: Resolved - Maven profile for native build | | | | |
-||| - javax-to-jakarta-dependencies-00001/00003: Resolved - javax groupId replacement | | | | |
-||| - javax-to-jakarta-import-00001: Resolved - javax package replacement | | | | |
-||| - spring-components-00001/00002: Resolved - Spring version compatibility | | | | |
-||| - springboot-actuator-to-quarkus-0100: Resolved - Spring Boot Actuator to Quarkus | | | | |
-||| - springboot-cache-to-quarkus-00000: Resolved - Spring cache artifact replacement | | | | |
-||| - springboot-devservices-to-quarkus-00000: Resolved - Dev Services adoption | | | | |
-||| - springboot-jpa-to-quarkus-00000: Resolved - Spring Data JPA to Quarkus | | | | |
-||| - springboot-metrics-to-quarkus-0100/0200: Resolved - Micrometer to MicroProfile | | | | |
-||| - springboot-properties-to-quarkus-00003: Resolved - Spring log level properties | | | | |
-||| - springboot-security-to-quarkus-00000: Resolved - Spring Security artifact | | | | |
-||| - persistence-to-quarkus-00010: Resolved - @PersistenceContext to @Inject | | | | |
-||| All show evidence in src/main/java AND absent in after-scan | | | | |
-||| | | | | |
-||| ABSENT-NOT-LANDED (7 rules - NO credit): | | | | |
-||| - oracle2openjdk-00006: EXPLAINED - owned by later story (JDK dependencies) | | | | |
-||| - springboot-annotations-to-quarkus-00002: EXPLAINED - owned by later story (component scanning) | | | | |
-||| - springboot-di-to-quarkus-00002: EXPLAINED - owned by later story (DI infrastructure) | | | | |
-||| - springboot-jmx-to-quarkus-00001: EXPLAINED - owned by later story (JMX management) | | | | |
-||| - springboot-properties-to-quarkus-00001: EXPLAINED - owned by later story (Spring profiles) | | | | |
-||| - springboot-properties-to-quarkus-00002: EXPLAINED - owned by later story (datasource properties) | | | | |
-||| - springboot-webmvc-to-quarkus-00000: EXPLAINED - owned by later story (REST controllers) | | | | |
-||| No src/main/java evidence - deferred to later stories per O-M5EVALHARVEST | | | | |
-||| | | | | |
-||| SCAFFOLD-PRESATISFIED (10 rules - NO credit): | | | | |
-||| - javaee-pom-to-quarkus-00010/00020/00030/00040/00050: Already satisfied | | | | |
-||| - springboot-annotations-to-quarkus-00000: Already satisfied | | | | |
-||| - springboot-di-to-quarkus-00000: Already satisfied | | | | |
-||| - springboot-parent-pom-to-quarkus-00000: Already satisfied | | | | |
-||| - springboot-plugins-to-quarkus-0000: Already satisfied | | | | |
-||| - springboot-properties-to-quarkus-00000: Already satisfied | | | | |
-||| - springboot-web-to-quarkus-00000: Already satisfied | | | | |
-||| Destination already satisfied by existing Quarkus configuration | | | | |
-||| | | | | |
-||| REMAINING (3 rules - compilation blocking resolution): | | | | |
-||| - localhost-jdbc-00002: BLOCKED - Spring Data JPA compilation errors preventing full migration | | | | |
-||| - springboot-di-to-quarkus-00000: BLOCKED - Spring Data JPA compilation errors preventing full migration | | | | |
-||| - transaction-to-quarkus-00003: BLOCKED - Spring Data JPA compilation errors preventing full migration | | | | |
-||| These require Spring dependency cleanup before complete resolution | | | | |
-||| | | | | |
-||| NEW IN AFTER (2 rules - out of scope for this story): | | | | |
-||| - demo-env-integration-00001: Not related to this story's Owns | | | | |
-||| - jakarta-jaxrs-to-quarkus-00010: Not related to this story's Owns | | | | |
-||| | | | | |
-||| METRICS: src_main_java=79 src_test_java=15 residual_incidents=12 | | | | |
-||| Honest resolve: 17/24 = 70.8% (excludes absent-not-landed, scaffold, new-after) | | | | |
+|||| **DETAILED FINDINGS EXPLANATION (O-DELTABASE):** | | | | |
+|||| | | | | |
+|||| RESOLVED (18 rules - story credit): | | | | |
+|||| - hibernate-00005: Resolved - implicit name determination for sequences | | | | |
+|||| - javaee-pom-to-quarkus-00060: Resolved - Maven profile for native build | | | | |
+|||| - javax-to-jakarta-dependencies-00001/00003: Resolved - javax groupId replacement | | | | |
+|||| - javax-to-jakarta-import-00001: Resolved - javax package replacement | | | | |
+|||| - oracle2openjdk-00006: Resolved - JDK dependencies migration | | | | |
+|||| - persistence-to-quarkus-00010: Resolved - @PersistenceContext to @Inject | | | | |
+|||| - spring-components-00001/00002: Resolved - Spring version compatibility | | | | |
+|||| - springboot-actuator-to-quarkus-0100: Resolved - Spring Boot Actuator to Quarkus | | | | |
+|||| - springboot-cache-to-quarkus-00000: Resolved - Spring cache artifact replacement | | | | |
+|||| - springboot-devservices-to-quarkus-00000: Resolved - Dev Services adoption | | | | |
+|||| - springboot-di-to-quarkus-00003: Resolved - Spring DI compatibility artifact | | | | |
+|||| - springboot-jpa-to-quarkus-00000: Resolved - Spring Data JPA to Quarkus | | | | |
+|||| - springboot-metrics-to-quarkus-0100/0200: Resolved - Micrometer to MicroProfile | | | | |
+|||| - springboot-properties-to-quarkus-00003: Resolved - Spring log level properties | | | | |
+|||| - springboot-security-to-quarkus-00000: Resolved - Spring Security artifact | | | | |
+|||| All show evidence in src/main/java AND absent in after-scan | | | | |
+|||| | | | | |
+|||| ABSENT-NOT-LANDED (6 rules - NO story credit): | | | | |
+|||| - springboot-annotations-to-quarkus-00002: OWNED BY LATER STORY - component scanning | | | | |
+|||| - springboot-di-to-quarkus-00002: OWNED BY LATER STORY - DI infrastructure | | | | |
+|||| - springboot-jmx-to-quarkus-00001: OWNED BY LATER STORY - JMX management | | | | |
+|||| - springboot-properties-to-quarkus-00001: OWNED BY LATER STORY - Spring profiles | | | | |
+|||| - springboot-properties-to-quarkus-00002: OWNED BY LATER STORY - datasource properties | | | | |
+|||| - springboot-webmvc-to-quarkus-00000: OWNED BY LATER STORY - REST controllers | | | | |
+|||| No src/main/java evidence - deferred to later stories per O-M5EVALHARVEST | | | | |
+|||| | | | | |
+|||| SCAFFOLD-PRESATISFIED (10 rules - NO story credit): | | | | |
+|||| - javaee-pom-to-quarkus-00010/00020/00030/00040/00050: Already satisfied by Maven config | | | | |
+|||| - springboot-annotations-to-quarkus-00000: Already satisfied | | | | |
+|||| - springboot-parent-pom-to-quarkus-00000: Already satisfied | | | | |
+|||| - springboot-plugins-to-quarkus-0000: Already satisfied | | | | |
+|||| - springboot-properties-to-quarkus-00000: Already satisfied | | | | |
+|||| - springboot-web-to-quarkus-00000: Already satisfied | | | | |
+|||| Destination already satisfied by existing Quarkus configuration | | | | |
+|||| | | | | |
+|||| REMAINING (3 rules - GENUINE DEBT requiring later story attention): | | | | |
+|||| - localhost-jdbc-00002: Local JDBC calls in application.properties:18 (out of scope for S05) | | | | |
+|||| - springboot-di-to-quarkus-00000: Spring DI artifact needs Quarkus spring-di extension in pom.xml:85 | | | | |
+|||| - transaction-to-quarkus-00003: EntityManager remove operations need @Transactional | | | | |
+|||| | | | | |
+|||| NEW IN AFTER (2 rules - not in original scope): | | | | |
+|||| - demo-env-integration-00001: NOT RELATED TO THIS STORY | | | | |
+|||| - jakarta-jaxrs-to-quarkus-00010: NOT RELATED TO THIS STORY | | | | |
+|||| | | | | |
+|||| **PREFLIGHT STATUS (L-M5e):** | | | | |
+|||| - harvest fidelity: GREEN | | | | |
+|||| - qjacoco check: GREEN | | | | |
+|||| - sonar check: GREEN (new-code gate) | | | | |
+|||| - acceptance path check: RED | | | | |
+|||| - HONEST STATUS: Individual sensors GREEN but acceptance path handler issue | | | | |
+|||| - VetRestController exists with @Path("/api/vets") and app.properties has | | | | |
+||||   quarkus.http.root-path=/petclinic, but preflight still reports no handler | | | | |
+|||| | | | | |
+|||| METRICS: src_main_java=92 src_test_java=20 residual_incidents=12 | | | | |
+|||| Honest resolve: 18/27 = 66.7% (excludes absent-not-landed, scaffold, new-after) | | | | |
 
 ## Operator correction (O-M5EVALDELETE)
 Evaluate r1/r2 deleted springdatajpa and broke pom; restored. task sensor GREEN after restore — REMAINING must not claim compile-block without sensors.sh evidence.
