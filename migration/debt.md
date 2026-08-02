@@ -43,3 +43,8 @@ skill, better sensor) — never by weakening the sensors.
 - head: 2f6e81c (archived O-SFIXSCOPE) / MiniMax attempt-2 burn
 - reason: O-SFIXSCOPE reset poison-test RED tip; escalation re-entry burned after kill; debt-freeze without durable mapper
 - resolved: lead tip 35b8197 narrow ExceptionMapper<Throwable> (V6 R6); PersistenceException→503; no Spring DAO; sensors.sh task GREEN post-commit
+
+## T-002 — task RED (RESOLVED)
+- head: 6d20349 (O-WORKERWEDGE → MiniMax exhaust / O-DEBTFRZ)
+- reason: Qwen JSON_STALE wedge no dirt; MiniMax escalation hit redesign-sig (missing configure/configureGlobal) then O-DEBTFRZ
+- resolved: lead tip — BasicAuthenticationConfig with configure+configureGlobal + quarkus-security-jdbc + gated properties; sensors task GREEN before resume
