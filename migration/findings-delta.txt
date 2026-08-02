@@ -1,8 +1,8 @@
 # Findings delta (O-DELTABASE — absence ≠ resolved)
 
-METRIC src_main_java=92 src_test_java=20
+METRIC src_main_java=98 src_test_java=23
 METRIC residual_incidents src/main=10 src/test=0 pom=2 props=0 other=0
-SUMMARY resolved=18 absent_not_landed=6 deferred_by_decision=0 scaffold_presatisfied=10 remaining=3 new_after=2 honest_resolve_pct=66.7 in_scope_resolve_pct=66.7
+SUMMARY resolved=19 absent_not_landed=5 deferred_by_decision=0 scaffold_presatisfied=10 remaining=3 new_after=2 honest_resolve_pct=70.4 in_scope_resolve_pct=70.4
 
 ## RESOLVED (landed evidence + rule absent after)
 - hibernate-00005
@@ -18,6 +18,7 @@ SUMMARY resolved=18 absent_not_landed=6 deferred_by_decision=0 scaffold_presatis
 - springboot-cache-to-quarkus-00000
 - springboot-devservices-to-quarkus-00000
 - springboot-di-to-quarkus-00003
+- springboot-jmx-to-quarkus-00001
 - springboot-jpa-to-quarkus-00000
 - springboot-metrics-to-quarkus-0100
 - springboot-metrics-to-quarkus-0200
@@ -27,7 +28,6 @@ SUMMARY resolved=18 absent_not_landed=6 deferred_by_decision=0 scaffold_presatis
 ## ABSENT-NOT-LANDED (do NOT credit as resolved — nothing in src/)
 - springboot-annotations-to-quarkus-00002
 - springboot-di-to-quarkus-00002
-- springboot-jmx-to-quarkus-00001
 - springboot-properties-to-quarkus-00001
 - springboot-properties-to-quarkus-00002
 - springboot-webmvc-to-quarkus-00000
@@ -56,4 +56,4 @@ SUMMARY resolved=18 absent_not_landed=6 deferred_by_decision=0 scaffold_presatis
 - demo-env-integration-00001
 - jakarta-jaxrs-to-quarkus-00010
 
-DELTABASE:resolved=18:absent=6:deferred=0:presat=10:remaining=3
+DELTABASE:resolved=19:absent=5:deferred=0:presat=10:remaining=3
