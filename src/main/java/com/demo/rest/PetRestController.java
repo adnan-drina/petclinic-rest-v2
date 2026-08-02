@@ -26,7 +26,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 import com.demo.dto.PetDto;
-import com.demo.dto.PetTypeDto;
 import com.demo.mapper.PetMapper;
 import com.demo.model.Pet;
 import com.demo.service.ClinicService;

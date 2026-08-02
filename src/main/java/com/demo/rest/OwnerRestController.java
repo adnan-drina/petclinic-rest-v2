@@ -19,7 +19,6 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -30,7 +29,6 @@ import com.demo.dto.OwnerDto;
 import com.demo.mapper.OwnerMapper;
 import com.demo.model.Owner;
 import com.demo.service.ClinicService;
-import com.demo.rest.BindingErrorsResponse;
 
 import java.util.Collection;
 
