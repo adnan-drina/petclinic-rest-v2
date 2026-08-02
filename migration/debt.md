@@ -33,3 +33,7 @@ skill, better sensor) — never by weakening the sensors.
 - head: ac42141
 - reason: sensor-fix did not clear task
 - resolved: false RED from untracked OwnerRestControllerTest (wrong 3-arg ctor) left by orphan/sfix; discarded; sensors.sh task GREEN; substance tip remains 8013cea
+
+## T-004 — milestone RED
+- head: 447767a
+- reason: sensor-fix did not clear milestone
