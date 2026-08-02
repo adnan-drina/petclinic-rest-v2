@@ -15,6 +15,9 @@
  */
 package com.demo.rest;
 
+import com.demo.security.Roles;
+import jakarta.annotation.security.RolesAllowed;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -53,6 +56,7 @@ public class PetTypeRestController {
     }
 
     @GET
+    @RolesAllowed({Roles.OWNER_ADMIN, Roles.VET_ADMIN})
     public Response getAllPetTypes() {
         Collection<PetTypeDto> petTypes = new ArrayList<>();
         petTypes.addAll(petTypeMapper.toPetTypeDtos(this.clinicService.findAllPetTypes()));
@@ -64,6 +68,7 @@ public class PetTypeRestController {
 
     @GET
     @Path("/{petTypeId}")
+    @RolesAllowed({Roles.OWNER_ADMIN, Roles.VET_ADMIN})
     public Response getPetType(@PathParam("petTypeId") int petTypeId) {
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {
@@ -74,6 +79,7 @@ public class PetTypeRestController {
 
     @POST
     @Transactional
+    @RolesAllowed(Roles.VET_ADMIN)
     public Response addPetType(@Valid @NotNull PetTypeDto petTypeDto) {
         BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(null, petTypeDto.getId());
         if (bindingErrorsResponse.hasErrors()) {
@@ -90,6 +96,7 @@ public class PetTypeRestController {
     @PUT
     @Path("/{petTypeId}")
     @Transactional
+    @RolesAllowed(Roles.VET_ADMIN)
     public Response updatePetType(@PathParam("petTypeId") int petTypeId, @Valid @NotNull PetTypeDto petTypeDto) {
         BindingErrorsResponse bindingErrorsResponse = new BindingErrorsResponse(petTypeId, petTypeDto.getId());
         if (bindingErrorsResponse.hasErrors()) {
@@ -109,6 +116,7 @@ public class PetTypeRestController {
     @DELETE
     @Path("/{petTypeId}")
     @Transactional
+    @RolesAllowed(Roles.VET_ADMIN)
     public Response deletePetType(@PathParam("petTypeId") int petTypeId) {
         PetType petType = this.clinicService.findPetTypeById(petTypeId);
         if (petType == null) {

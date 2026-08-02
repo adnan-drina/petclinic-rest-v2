@@ -15,6 +15,9 @@
  */
 package com.demo.rest;
 
+import com.demo.security.Roles;
+import jakarta.annotation.security.RolesAllowed;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -41,6 +44,7 @@ import java.util.Collection;
 @Path("/api/specialties")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed(Roles.VET_ADMIN)
 public class SpecialtyRestController {
 
     private final ClinicService clinicService;

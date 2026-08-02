@@ -15,6 +15,9 @@
  */
 package com.demo.rest;
 
+import com.demo.security.Roles;
+import jakarta.annotation.security.RolesAllowed;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -39,6 +42,7 @@ import com.demo.service.UserService;
 @Path("/api/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed(Roles.ADMIN)
 public class UserRestController {
 
     private final UserService userService;

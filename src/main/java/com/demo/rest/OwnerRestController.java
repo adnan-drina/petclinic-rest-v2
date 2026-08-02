@@ -15,6 +15,9 @@
  */
 package com.demo.rest;
 
+import com.demo.security.Roles;
+import jakarta.annotation.security.RolesAllowed;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -40,6 +43,7 @@ import java.util.Collection;
 @Path("/api/owners")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed(Roles.OWNER_ADMIN)
 public class OwnerRestController {
 
     private final ClinicService clinicService;
